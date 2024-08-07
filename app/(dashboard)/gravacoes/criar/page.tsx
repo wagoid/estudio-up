@@ -5,7 +5,7 @@ import { FormTextField } from '@/components/ui/FormTextField'
 import { requiredString } from '@/lib/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Container, Stack, Typography } from '@mui/material'
-import { createInitialRecording } from 'app/actions/recordings'
+import { createInitialRecordingAction } from '@/lib/modules/recordings/recordings.actions'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -25,7 +25,7 @@ export default function CreateRecording() {
   })
 
   const onSubmit = handleSubmit(async (formData) => {
-    await createInitialRecording(formData.title)
+    await createInitialRecordingAction(formData.title)
   })
 
   return (

@@ -1,6 +1,6 @@
-import { getRecording } from 'app/entities/recordings'
 import { PageContent } from '../_components/PageContent'
 import { Container } from '@mui/material'
+import { getRecordingAction } from '@/lib/modules/recordings/recordings.actions'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,7 +13,7 @@ type EditRecordingProps = {
 export default async function EditRecording({
   params: { recordingId },
 }: EditRecordingProps) {
-  const recording = await getRecording(recordingId)
+  const recording = await getRecordingAction(recordingId)
 
   return (
     <Container>

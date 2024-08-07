@@ -1,4 +1,4 @@
-import { Voice } from 'app/entities/recordings'
+import { Voice } from '@/lib/modules/recordings/Recording.entity'
 
 const mainVoice: Voice = {
   source: 'azure',

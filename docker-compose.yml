@@ -1,14 +1,23 @@
 services:
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres
     restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      POSTGRES_PASSWORD: example
     ports:
-      - 27017:27017
+      - 5433:5432
     volumes:
-      - mongodb_data:/data/db
+      - postgres_data:/var/lib/postgresql
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'postgres@example.com'
+      PGADMIN_DEFAULT_PASSWORD: 'example'
+    ports:
+      - '8080:80'
 
   minio:
     image: bitnami/minio:latest
@@ -23,5 +32,5 @@ services:
       - MINIO_DEFAULT_BUCKETS=estudio-up
 
 volumes:
-  mongodb_data:
+  postgres_data:
   minio_data:

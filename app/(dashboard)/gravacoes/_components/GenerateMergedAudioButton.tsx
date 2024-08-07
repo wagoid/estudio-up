@@ -2,17 +2,22 @@
 
 import { buildAudioPath } from '@/lib/urls'
 import { Button, ButtonProps } from '@mui/material'
-import { Recording } from 'app/entities/recordings'
+import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 import Crunker from 'crunker'
 import { FC } from 'react'
 
 export const GenerateMergedAudioButton: FC<
-  Omit<ButtonProps, 'onClick'> & { recording: Recording }
-> = ({ recording, ...otherProps }) => {
+  Omit<ButtonProps, 'onClick'> & { recording: RecordingObj }
+> = ({
+  recording: {
+    data: { title, chapters },
+  },
+  ...otherProps
+}) => {
   const generateMergedAudio = async () => {
     const crunker = new Crunker()
-    const titlePath = buildAudioPath(recording.title)
-    const chapterPaths = recording.chapters
+    const titlePath = buildAudioPath(title)
+    const chapterPaths = chapters
       .flatMap((chapter) =>
         chapter.title ? [chapter.title, chapter.content] : chapter.content,
       )
@@ -23,7 +28,7 @@ export const GenerateMergedAudioButton: FC<
       crunker.concatAudio(fetchedAudios),
       'audio/mp3',
     )
-    crunker.download(output.blob, `${recording.title.text}.mp3`)
+    crunker.download(output.blob, `${title.text}.mp3`)
   }
 
   return (

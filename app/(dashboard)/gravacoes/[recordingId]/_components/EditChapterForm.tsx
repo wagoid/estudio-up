@@ -1,16 +1,17 @@
-import { Audio, ChapterType, Recording } from 'app/entities/recordings'
+import { Audio, ChapterType } from '@/lib/modules/recordings/Recording.entity'
 import { Box, IconButton, Paper, Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { FormTextField } from '@/components/ui/FormTextField'
 import { FC } from 'react'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
-import { upsertChapter } from 'app/actions/recordings'
+import { upsertChapterAction } from '@/lib/modules/recordings/recordings.actions'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import { requiredString } from '@/lib/validation'
 import { FormSubmitButton } from '@/components/ui/FormSubmitButton'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 
 type DraftAudio = Omit<Audio, 'voice'>
 
@@ -31,7 +32,7 @@ export type EditingChapter = {
 
 type EditChapterFormProps = {
   chapter: EditingChapter
-  recording: Recording
+  recording: RecordingObj
   onRemove: (chapter: EditingChapter) => Promise<void>
 }
 
@@ -52,7 +53,7 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
   const router = useRouter()
 
   const onSubmit = handleSubmit(async (formData) => {
-    await upsertChapter(recording._id, {
+    await upsertChapterAction(recording.id, {
       titleId: chapter.title?.fileId,
       contentId: chapter.content.fileId,
       type: formData.type as ChapterType,

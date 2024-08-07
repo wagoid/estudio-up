@@ -1,4 +1,3 @@
-import { Audio, getRecording } from 'app/entities/recordings'
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
 } from '@mui/material'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
 import { GenerateMergedAudioButton } from '../_components/GenerateMergedAudioButton'
+import { getRecordingAction } from '@/lib/modules/recordings/recordings.actions'
 
 type ViewRecordingProps = {
   params: {
@@ -21,7 +21,7 @@ type ViewRecordingProps = {
 export default async function ViewRecording({
   params: { recordingId },
 }: ViewRecordingProps) {
-  const recording = await getRecording(recordingId)
+  const recording = await getRecordingAction(recordingId)
 
   return (
     <Container>
@@ -31,14 +31,14 @@ export default async function ViewRecording({
           recording={recording}
         />
         <Typography variant="h4" component="h2">
-          {recording.title.text}
+          {recording.data.title.text}
         </Typography>
-        <AudioPlayer audio={recording.title} />
+        <AudioPlayer audio={recording.data.title} />
         <Typography variant="h4" component="h2">
           Capítulos
         </Typography>
-        {recording.chapters.map((chapter) => (
-          <Card variant="outlined">
+        {recording.data.chapters.map((chapter) => (
+          <Card variant="outlined" key={chapter.content.fileId}>
             {chapter.title && (
               <CardHeader
                 variant="body2"

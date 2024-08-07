@@ -8,6 +8,10 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    instrumentationHook: true,
+    serverComponentsExternalPackages: ['typeorm'],
+  },
 }
 
 module.exports = nextConfig

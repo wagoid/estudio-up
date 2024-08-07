@@ -3,8 +3,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "node-pg-migrate",
+    "typeorm": "dotenv  -- typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.623.0",
@@ -22,17 +23,21 @@
     "crunker": "^2.4.0",
     "material-ui-popup-state": "^5.1.2",
     "microsoft-cognitiveservices-speech-sdk": "^1.38.0",
-    "mongodb": "^6.8.0",
     "nanoid": "^5.0.7",
     "next": "^14.2.5",
     "next-auth": "^5.0.0-beta.20",
+    "node-pg-migrate": "^7.6.1",
     "p-retry": "^6.2.0",
+    "pg": "^8.4.0",
+    "pg-pool": "^3.6.2",
     "prettier": "^3.3.2",
     "query-string": "^9.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "^7.52.2",
+    "reflect-metadata": "^0.1.14",
     "server-only": "^0.0.1",
+    "typeorm": "^0.3.20",
     "typescript": "5.5.3",
     "zod": "^3.23.8"
   },
@@ -41,5 +46,13 @@
     "trailingComma": "all",
     "semi": false,
     "tabWidth": 2
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "@types/pg": "^8.11.6",
+    "@types/pg-pool": "^2.0.6",
+    "dotenv-cli": "^7.4.2",
+    "ts-node": "10.9.1",
+    "typescript": "4.5.2"
   }
 }

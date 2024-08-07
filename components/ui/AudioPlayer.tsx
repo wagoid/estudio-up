@@ -1,4 +1,4 @@
-import { Audio } from 'app/entities/recordings'
+import { Audio } from '@/lib/modules/recordings/Recording.entity'
 import { CSSProperties, FC } from 'react'
 
 type AudioPlayerProps = {

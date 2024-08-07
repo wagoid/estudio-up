@@ -1,4 +1,4 @@
-import { audiosFolder } from '@/lib/constants'
+import { audiosFolder } from '@/lib/modules/recordings/recordings.constants'
 import { getFile } from '@/lib/objectStore'
 
 type StreamAudioParams = {

@@ -3,8 +3,8 @@
 import { FormSubmitButton } from '@/components/ui/FormSubmitButton'
 import { FormTextField } from '@/components/ui/FormTextField'
 import { Box, Button, Stack } from '@mui/material'
-import { updateRecordingTitle } from 'app/actions/recordings'
-import { Recording } from 'app/entities/recordings'
+import { updateRecordingTitleAction } from '@/lib/modules/recordings/recordings.actions'
+import { Recording } from '@/lib/modules/recordings/Recording.entity'
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,6 +12,7 @@ import { requiredString } from '@/lib/validation'
 import { z } from 'zod'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
 import { useRouter } from 'next/navigation'
+import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 
 const schema = z.object({
   title: requiredString(),
@@ -20,13 +21,18 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 type EditTitleFormProps = {
-  recording: Recording
+  recording: RecordingObj
 }
 
-export const EditTitleForm: FC<EditTitleFormProps> = ({ recording }) => {
+export const EditTitleForm: FC<EditTitleFormProps> = ({
+  recording: {
+    id,
+    data: { title },
+  },
+}) => {
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
-      title: recording.title.text,
+      title: title.text,
     },
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -34,11 +40,7 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({ recording }) => {
   const router = useRouter()
 
   const onSubmit = handleSubmit(async (formData) => {
-    await updateRecordingTitle(
-      recording._id,
-      recording.title.fileId,
-      formData.title,
-    )
+    await updateRecordingTitleAction(id, title.fileId, formData.title)
     router.refresh()
   })
 
@@ -46,7 +48,7 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({ recording }) => {
     <Box component="form" noValidate autoComplete="off" onSubmit={onSubmit}>
       <Stack alignItems="flex-start">
         <FormTextField name="title" label="Título" control={control} required />
-        <AudioPlayer audio={recording.title} />
+        <AudioPlayer audio={title} />
         <FormSubmitButton control={control}>Gerar áudio</FormSubmitButton>
       </Stack>
     </Box>

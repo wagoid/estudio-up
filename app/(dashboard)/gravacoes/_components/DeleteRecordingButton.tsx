@@ -4,9 +4,9 @@ import { IconButton } from '@mui/material'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import { FC } from 'react'
 import { useRouter } from 'next/navigation'
-import { deleteRecording } from 'app/actions/recordings'
+import { deleteRecordingAction } from '@/lib/modules/recordings/recordings.actions'
 
-export const DeleteRecordingButton: FC<{ id: string }> = ({ id }) => {
+export const DeleteRecordingButton: FC<{ id: number }> = ({ id }) => {
   const router = useRouter()
 
   return (
@@ -14,7 +14,7 @@ export const DeleteRecordingButton: FC<{ id: string }> = ({ id }) => {
       edge="end"
       title="Remover"
       onClick={async () => {
-        await deleteRecording(id)
+        await deleteRecordingAction(id)
         router.refresh()
       }}
     >

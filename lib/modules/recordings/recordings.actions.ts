@@ -1,23 +1,28 @@
 'use server'
 
-import { azureVoices, audioUploadInput } from '@/lib/constants'
+import { PaginationParams, PaginationResponse } from '@/lib/db'
 import { generateId } from '@/lib/id'
 import { deleteFile, uploadFile } from '@/lib/objectStore'
 import { textToSpeech } from '@/lib/tts'
 import {
-  Audio,
   buildAudioFilePath,
-  Chapter,
-  ChapterType,
   createRecording,
   getRecording,
-  updateRecording,
-  Voice,
-  deleteRecording as deleteDBRecording,
-} from 'app/entities/recordings'
+  deleteRecording,
+  saveRecording,
+  getRecordings,
+} from '@/lib/modules/recordings/recordings.utils'
 import { redirect } from 'next/navigation'
+import {
+  Audio,
+  Chapter,
+  ChapterType,
+  RecordingObj,
+  Voice,
+} from './Recording.entity'
+import { audioUploadInput, azureVoices } from './recordings.constants'
 
-export const createInitialRecording = async (title: string) => {
+export const createInitialRecordingAction = async (title: string) => {
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, title, azureVoices.main.code)
 
@@ -31,7 +36,7 @@ export const createInitialRecording = async (title: string) => {
     chapters: [],
   })
 
-  return redirect(`/gravacoes/${recording._id}/editar`)
+  return redirect(`/gravacoes/${recording.id}/editar`)
 }
 
 export type UpsertChapterData = {
@@ -40,6 +45,27 @@ export type UpsertChapterData = {
   titleText?: string
   contentId: string
   contentText: string
+}
+
+export const getRecordingAction = async (
+  id: string | number,
+): Promise<RecordingObj> => {
+  const recording = await getRecording(id)
+
+  return {
+    ...recording,
+  }
+}
+
+export const getRecordingsAction = async (
+  pagination: PaginationParams,
+): Promise<{ recordings: RecordingObj[]; pagination: PaginationResponse }> => {
+  const result = await getRecordings(pagination)
+
+  return {
+    ...result,
+    recordings: result.recordings.map((recording) => ({ ...recording })),
+  }
 }
 
 const buildTitleAudio = async (
@@ -94,8 +120,8 @@ const buildContentAudio = async (
   return content
 }
 
-export const upsertChapter = async (
-  id: string,
+export const upsertChapterAction = async (
+  id: number,
   formData: UpsertChapterData,
 ) => {
   const {
@@ -112,7 +138,7 @@ export const upsertChapter = async (
   const recording = await getRecording(id)
   const currentChapterPredicate = (chapter: Chapter) =>
     chapter.content.fileId === inputContentId
-  const existingChapter = recording.chapters.find(currentChapterPredicate)
+  const existingChapter = recording.data.chapters.find(currentChapterPredicate)
 
   const titleId =
     inputTitleId && existingChapter?.title?.text !== titleText
@@ -142,20 +168,21 @@ export const upsertChapter = async (
   }
 
   const updatedChapters = existingChapter
-    ? recording.chapters.map((chapter) => {
+    ? recording.data.chapters.map((chapter) => {
         if (currentChapterPredicate(chapter)) {
           return chapterToUpsert
         }
 
         return chapter
       })
-    : [...recording.chapters, chapterToUpsert]
+    : [...recording.data.chapters, chapterToUpsert]
 
-  await updateRecording(id, {
-    $set: {
-      chapters: updatedChapters,
-    },
-  })
+  recording.data = {
+    ...recording.data,
+    chapters: updatedChapters,
+  }
+
+  await saveRecording(recording)
 
   if (existingChapter) {
     if (inputTitleId && inputTitleId !== titleId) {
@@ -167,8 +194,8 @@ export const upsertChapter = async (
   }
 }
 
-export const deleteChapter = async (
-  id: string,
+export const deleteChapterAction = async (
+  id: number,
   contentFileId: string,
   titleFileId?: string,
 ) => {
@@ -179,40 +206,41 @@ export const deleteChapter = async (
   }
   await deleteFile(buildAudioFilePath(contentFileId))
 
-  await updateRecording(id, {
-    $pull: {
-      chapters: recording.chapters.find(
-        (chapter) => chapter.content.fileId === contentFileId,
-      ),
-    },
-  })
+  recording.data.chapters = recording.data.chapters.filter(
+    (chapter) => chapter.content.fileId !== contentFileId,
+  )
+
+  await saveRecording(recording)
 }
 
-export const updateRecordingTitle = async (
-  id: string,
+export const updateRecordingTitleAction = async (
+  id: number,
   titleId: string,
   titleText: string,
 ) => {
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, titleText, azureVoices.main.code)
+  const recording = await getRecording(id)
 
   await uploadFile(buildAudioFilePath(fileId), audioFile, audioUploadInput)
-  await updateRecording(id, {
-    $set: {
-      title: {
-        text: titleText,
-        fileId,
-        voice: azureVoices.main,
-      },
-    },
-  })
+
+  recording.data.title = {
+    text: titleText,
+    fileId,
+    voice: azureVoices.main,
+  }
+
+  await saveRecording(recording)
+
   await deleteFile(buildAudioFilePath(titleId))
 }
 
-export const deleteRecording = async (id: string) => {
-  const { title, chapters } = await getRecording(id)
+export const deleteRecordingAction = async (id: number) => {
+  const {
+    data: { title, chapters },
+  } = await getRecording(id)
 
-  await deleteDBRecording(id)
+  await deleteRecording(id)
 
   await deleteFile(buildAudioFilePath(title.fileId))
 

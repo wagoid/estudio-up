@@ -5,7 +5,7 @@ Este projeto usa as seguintes ferramentas:
 - Framework - [Next.js (App Router)](https://nextjs.org)
 - Linguagem - [TypeScript](https://www.typescriptlang.org)
 - Autenticação - [Auth.js](https://authjs.dev)
-- Banco de dados - [MongoDB](https://www.mongodb.com)
+- Banco de dados - [PostgreSQL](https://www.postgresql.org)
 - Componentes de UI - [Material UI](https://mui.com/material-ui)
 - Formulários - [React Hook Form](https://react-hook-form.com) e [zod](https://zod.dev)
 - Analytics - [Vercel Analytics](https://vercel.com/analytics)
@@ -20,6 +20,12 @@ Instale [Docker](https://www.docker.com), e execute o seguinte para rodar o banc
 
 ```sh
 docker compose up
+```
+
+Execute as migrations para initializar as tabelas do banco de dados.
+
+```sh
+npm run typeorm -- -d data-source.ts migration:run
 ```
 
 Inicie o servidor de desenvolvimento:

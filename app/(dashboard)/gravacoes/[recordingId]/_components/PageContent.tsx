@@ -1,6 +1,5 @@
 'use client'
 
-import { Recording } from 'app/entities/recordings'
 import {
   Button,
   Card,
@@ -12,24 +11,25 @@ import {
 import { FC, useEffect, useState } from 'react'
 import { generateId } from '@/lib/id'
 import { EditingChapter, EditChapterForm } from './EditChapterForm'
-import { deleteChapter } from 'app/actions/recordings'
+import { deleteChapterAction } from '@/lib/modules/recordings/recordings.actions'
 import { useRouter } from 'next/navigation'
 import { GenerateMergedAudioButton } from '../../_components/GenerateMergedAudioButton'
 import { EditTitleForm } from './EditTitleForm'
+import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 
 type PageContentProps = {
-  recording: Recording
+  recording: RecordingObj
 }
 
 export const PageContent: FC<PageContentProps> = ({ recording }) => {
-  const [editingChapters, setEditingChapters] = useState<EditingChapter[]>(
-    recording.chapters,
-  )
+  const { chapters } = recording.data
+  const [editingChapters, setEditingChapters] =
+    useState<EditingChapter[]>(chapters)
   const router = useRouter()
 
   useEffect(() => {
-    setEditingChapters(recording.chapters)
-  }, [recording])
+    setEditingChapters(chapters)
+  }, [chapters])
 
   const onRemoveChapter = async (chapter: EditingChapter) => {
     if (chapter.isDraft) {
@@ -37,7 +37,7 @@ export const PageContent: FC<PageContentProps> = ({ recording }) => {
         prev.filter(({ content }) => content.fileId !== chapter.content.fileId),
       )
     } else {
-      await deleteChapter(recording._id, chapter.content.fileId)
+      await deleteChapterAction(recording.id, chapter.content.fileId)
       router.refresh()
     }
   }
