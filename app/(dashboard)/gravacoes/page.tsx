@@ -18,6 +18,8 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { RecordingsPagination } from './_components/RecordingsPatination'
 import { getRecordingsAction } from '@/lib/modules/recordings/recordings.actions'
+import { AudioPlayer } from '@/components/ui/AudioPlayer'
+import { RecordingFileInfo } from './_components/RecordingFileInfo'
 
 type RecordingsPageProps = {
   searchParams: {
@@ -48,6 +50,7 @@ export default async function RecordingsPage({
           <TableHead>
             <TableRow>
               <TableCell>Título</TableCell>
+              <TableCell>Áudio final</TableCell>
               <TableCell align="right">Ações</TableCell>
             </TableRow>
           </TableHead>
@@ -56,6 +59,9 @@ export default async function RecordingsPage({
               <TableRow key={recording.id}>
                 <TableCell component="th" scope="row">
                   {recording.data.title.text}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  <RecordingFileInfo inline recording={recording} />
                 </TableCell>
                 <TableCell align="right">
                   <Stack direction="row" spacing={0} justifyContent="flex-end">

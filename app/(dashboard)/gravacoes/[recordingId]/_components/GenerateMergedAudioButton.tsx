@@ -5,15 +5,20 @@ import { Button, ButtonProps } from '@mui/material'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 import Crunker from 'crunker'
 import { FC } from 'react'
+import { uploadMergedAudioAction } from '@/lib/modules/recordings/recordings.actions'
+import { useRouter } from 'next/navigation'
 
 export const GenerateMergedAudioButton: FC<
   Omit<ButtonProps, 'onClick'> & { recording: RecordingObj }
 > = ({
   recording: {
+    id,
     data: { title, chapters },
   },
   ...otherProps
 }) => {
+  const router = useRouter()
+
   const generateMergedAudio = async () => {
     const crunker = new Crunker()
     const titlePath = buildAudioPath(title)
@@ -28,7 +33,12 @@ export const GenerateMergedAudioButton: FC<
       crunker.concatAudio(fetchedAudios),
       'audio/mp3',
     )
-    crunker.download(output.blob, `${title.text}.mp3`)
+
+    const formData = new FormData()
+    formData.append('file', output.blob)
+
+    await uploadMergedAudioAction(id, formData)
+    router.refresh()
   }
 
   return (
@@ -38,7 +48,7 @@ export const GenerateMergedAudioButton: FC<
       onClick={generateMergedAudio}
       {...otherProps}
     >
-      Gerar arquivo final
+      Gerar áudio final
     </Button>
   )
 }

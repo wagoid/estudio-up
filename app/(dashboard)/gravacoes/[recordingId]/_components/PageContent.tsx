@@ -6,6 +6,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Link,
   Stack,
 } from '@mui/material'
 import { FC, useEffect, useState } from 'react'
@@ -13,19 +14,31 @@ import { generateId } from '@/lib/id'
 import { EditingChapter, EditChapterForm } from './EditChapterForm'
 import { deleteChapterAction } from '@/lib/modules/recordings/recordings.actions'
 import { useRouter } from 'next/navigation'
-import { GenerateMergedAudioButton } from '../../_components/GenerateMergedAudioButton'
+import { GenerateMergedAudioButton } from './GenerateMergedAudioButton'
 import { EditTitleForm } from './EditTitleForm'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
+import { buildAudioPath } from '@/lib/urls'
+import { RecordingFileInfo } from '../../_components/RecordingFileInfo'
 
 type PageContentProps = {
   recording: RecordingObj
 }
 
 export const PageContent: FC<PageContentProps> = ({ recording }) => {
-  const { chapters } = recording.data
+  const [isClient, setIsClient] = useState(false)
+  const { chapters, fileId } = recording.data
   const [editingChapters, setEditingChapters] =
     useState<EditingChapter[]>(chapters)
   const router = useRouter()
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  const finalAudioUrl =
+    isClient &&
+    fileId &&
+    `${window.location.origin}${buildAudioPath({ fileId })}`
 
   useEffect(() => {
     setEditingChapters(chapters)
@@ -92,6 +105,7 @@ export const PageContent: FC<PageContentProps> = ({ recording }) => {
         disabled={editingChapters.some((chapter) => chapter.isDraft)}
         sx={{ alignSelf: 'flex-start' }}
       />
+      <RecordingFileInfo recording={recording} />
     </Stack>
   )
 }

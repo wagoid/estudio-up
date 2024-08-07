@@ -2,7 +2,7 @@ import { Audio } from '@/lib/modules/recordings/Recording.entity'
 import { CSSProperties, FC } from 'react'
 
 type AudioPlayerProps = {
-  audio: Omit<Audio, 'voice'>
+  audio: Pick<Audio, 'fileId'>
   style?: CSSProperties
 }
 

@@ -31,6 +31,7 @@ export interface Chapter {
 export interface RecordingData {
   title: Audio
   chapters: Chapter[]
+  fileId?: string
 }
 
 export interface RecordingObj {

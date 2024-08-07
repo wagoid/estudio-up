@@ -252,3 +252,23 @@ export const deleteRecordingAction = async (id: number) => {
     }
   }
 }
+
+export const uploadMergedAudioAction = async (
+  id: number,
+  formData: FormData,
+) => {
+  const file = formData.get('file') as File
+  const fileId = generateId()
+
+  const recording = await getRecording(id)
+
+  await uploadFile(
+    buildAudioFilePath(fileId),
+    (await file.arrayBuffer()) as Buffer,
+    audioUploadInput,
+  )
+
+  recording.data.fileId = fileId
+
+  await saveRecording(recording)
+}

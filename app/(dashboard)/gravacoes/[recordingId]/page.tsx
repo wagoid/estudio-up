@@ -9,8 +9,8 @@ import {
   Typography,
 } from '@mui/material'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
-import { GenerateMergedAudioButton } from '../_components/GenerateMergedAudioButton'
 import { getRecordingAction } from '@/lib/modules/recordings/recordings.actions'
+import { RecordingFileInfo } from '../_components/RecordingFileInfo'
 
 type ViewRecordingProps = {
   params: {
@@ -26,10 +26,7 @@ export default async function ViewRecording({
   return (
     <Container>
       <Stack>
-        <GenerateMergedAudioButton
-          sx={{ alignSelf: 'flex-start' }}
-          recording={recording}
-        />
+        <RecordingFileInfo recording={recording} />
         <Typography variant="h4" component="h2">
           {recording.data.title.text}
         </Typography>
