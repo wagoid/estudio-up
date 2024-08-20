@@ -5,6 +5,12 @@ import { audiosFolder } from './recordings.constants'
 export const buildAudioFilePath = (fileId: string) =>
   `${audiosFolder}/${fileId}.mp3`
 
+const getRepository = async () => {
+  const dataSource = await getDataSource()
+
+  return dataSource.getRepository(Recording)
+}
+
 export const createRecording = async (
   input: RecordingData,
 ): Promise<Recording> => {
@@ -19,12 +25,6 @@ export const createRecording = async (
   console.log('created recording')
 
   return recording
-}
-
-const getRepository = async () => {
-  const dataSource = await getDataSource()
-
-  return dataSource.getRepository(Recording)
 }
 
 export const saveRecording = async (recording: Recording) => {
@@ -71,5 +71,5 @@ export const getRecording = async (id: string | number): Promise<Recording> => {
 export const deleteRecording = async (id: number) => {
   const repository = await getRepository()
 
-  await repository.createQueryBuilder().where({ id }).delete().execute()
+  await repository.delete(id)
 }

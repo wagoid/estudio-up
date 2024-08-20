@@ -1,23 +1,26 @@
 import NextAuth from 'next-auth'
 import AuthentikProvider from 'next-auth/providers/authentik'
 
+const { AUTHENTIK_URL, AUTHENTIK_ID, AUTHENTIK_SECRET } = process.env
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     AuthentikProvider({
-      clientId: process.env.AUTHENTIK_ID,
-      clientSecret: process.env.AUTHENTIK_SECRET,
-      issuer: `${process.env.AUTHENTIK_URL}/application/o/estudio-up/`,
+      clientId: AUTHENTIK_ID,
+      clientSecret: AUTHENTIK_SECRET,
+      issuer: `${AUTHENTIK_URL}/application/o/estudio-up/`,
       // Necessário passar o url de cada endpoint (authorization, token, userinfo) porquê dá erro quando passa só o issuer
       // (authentik retorna com trailing slash, next-auth remove trailing slash do issuer)
       authorization: {
         params: { scope: 'openid email profile offline_access' },
-        url: `${process.env.AUTHENTIK_URL}/application/o/authorize/`,
+        url: `${AUTHENTIK_URL}/application/o/authorize/`,
       },
       token: {
-        url: `${process.env.AUTHENTIK_URL}/application/o/token/`,
+        url: `${AUTHENTIK_URL}/application/o/token/`,
       },
       userinfo: {
-        url: `${process.env.AUTHENTIK_URL}/application/o/userinfo/`,
+        url: `${AUTHENTIK_URL}/application/o/userinfo/`,
       },
     }),
   ],

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: estudio-deployment
+  namespace: apps
+  labels:
+    app: estudio
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: estudio
+  template:
+    metadata:
+      labels:
+        app: estudio
+    spec:
+      imagePullSecrets:
+        - name: docker-cfg
+      containers:
+        - name: estudio
+          image: ghcr.io/wagoid/estudio-up:0.0.0
+          command: ['node']
+          args: ['server.js']
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+          envFrom:
+            - secretRef:
+                name: estudio-secrets
+          env:
+            - name: HOSTNAME
+              value: '0.0.0.0'
+            - name: POSTGRES_HOST
+              value: cnpg-cluster-postgres-cluster-rw.cnpg-database
+            - name: POSTGRES_PORT
+              value: '5433'
+            - name: POSTGRES_DATABASE
+              value: estudio
+            - name: POSTGRES_USER
+              value: estudio
+            - name: AUTHENTIK_URL
+              value: https://acesso.uptec.top
+            - name: AZURE_TTS_ENDPOINT
+              value: https://brazilsouth.api.cognitive.microsoft.com/
+            - name: AZURE_TTS_REGION
+              value: brazilsouth
+            - name: AWS_BUCKET_NAME
+              value: estudio
+            - name: AWS_REGION
+              value: local
+            - name: AWS_ACCESS_KEY_ID
+              value: estudio
+            - name: AWS_S3_ENDPOINT_URL
+              value: http://minio-lead.minio:9000
+            - name: AWS_S3_FORCE_PATH_STYLE
+              value: 'true'
