@@ -1,52 +1,33 @@
-import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
+import NextAuth from 'next-auth'
+import AuthentikProvider from 'next-auth/providers/authentik'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    Credentials({
-      name: 'credentials',
-      credentials: {
-        username: { label: 'Usuário', type: 'text' },
-        password: { label: 'Senha', type: 'password' }
+    AuthentikProvider({
+      clientId: process.env.AUTHENTIK_ID,
+      clientSecret: process.env.AUTHENTIK_SECRET,
+      issuer: `${process.env.AUTHENTIK_URL}/application/o/estudio-up/`,
+      // Necessário passar o url de cada endpoint (authorization, token, userinfo) porquê dá erro quando passa só o issuer
+      // (authentik retorna com trailing slash, next-auth remove trailing slash do issuer)
+      authorization: {
+        params: { scope: 'openid email profile offline_access' },
+        url: `${process.env.AUTHENTIK_URL}/application/o/authorize/`,
       },
-      async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
-        // const res = await fetch('/your/endpoint', {
-        //   method: 'POST',
-        //   body: JSON.stringify(credentials),
-        //   headers: { 'Content-Type': 'application/json' }
-        // });
-        // const user = await res.json();
-
-        // If no error and we have user data, return it
-        // if (res.ok && user) {
-        //   return user;
-        // }
-        // Return null if user data could not be retrieved
-
-        if (
-          credentials?.username === process.env.CREDENTIALS_USER &&
-          credentials?.password === process.env.CREDENTIALS_PASSWORD
-        ) {
-          return {
-            id: '1',
-            name: process.env.CREDENTIALS_USER  
-          };
-        }
-
-        return null;
-      }
-    })
+      token: {
+        url: `${process.env.AUTHENTIK_URL}/application/o/token/`,
+      },
+      userinfo: {
+        url: `${process.env.AUTHENTIK_URL}/application/o/userinfo/`,
+      },
+    }),
   ],
   callbacks: {
     authorized: async ({ auth }) => {
-      // Logged in users are authenticated, otherwise redirect to login page
-      return !!auth;
-    }
+      // Usuários logados são authenticados, caso contrário é redirecionado para a tela de login
+      return !!auth
+    },
   },
-});
+  pages: {
+    signIn: '/api/signin',
+  },
+})

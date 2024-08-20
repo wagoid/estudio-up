@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { User } from 'next-auth'
 import { FC } from 'react'
-import { Button, Popover } from '@mui/material'
+import { Box, Button, Divider, Popover, Typography } from '@mui/material'
 import {
   bindPopover,
   bindTrigger,
@@ -14,6 +14,7 @@ export const UserDropdown: FC<{ user?: User }> = ({ user }) => {
     variant: 'popover',
     popupId: 'user-dropdown',
   })
+  const userInitials = user?.name?.split(' ').join('+')
 
   return (
     <>
@@ -24,7 +25,9 @@ export const UserDropdown: FC<{ user?: User }> = ({ user }) => {
         {...bindTrigger(popupState)}
       >
         <Image
-          src={user?.image ?? '/placeholder-user.jpg'}
+          src={
+            user?.image ?? `https://ui-avatars.com/api/?name=${userInitials}`
+          }
           width={36}
           height={36}
           alt="Imagem do usuário"
@@ -44,14 +47,34 @@ export const UserDropdown: FC<{ user?: User }> = ({ user }) => {
         }}
       >
         {user ? (
-          <form action={signOutAction}>
-            <Button type="submit" variant="text" onClick={popupState.close}>
-              Sair
-            </Button>
-          </form>
+          <Box sx={{ py: 1 }}>
+            <Box sx={{ px: 1 }}>
+              <Typography variant="body1" sx={{ fontWeight: '700' }}>
+                {user.name}
+              </Typography>
+              <Typography variant="body2">{user.email}</Typography>
+            </Box>
+            <Divider sx={{ my: 1 }} />
+            <form action={signOutAction}>
+              <Button
+                type="submit"
+                variant="text"
+                fullWidth
+                sx={{ justifyContent: 'flex-start' }}
+                onClick={popupState.close}
+              >
+                Sair
+              </Button>
+            </form>
+          </Box>
         ) : (
           <form action={signInAction}>
-            <Button type="submit" variant="text" onClick={popupState.close}>
+            <Button
+              type="submit"
+              variant="text"
+              sx={{ justifyContent: 'flex-start' }}
+              onClick={popupState.close}
+            >
               Entrar
             </Button>
           </form>
