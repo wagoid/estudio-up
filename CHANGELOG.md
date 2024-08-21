@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/wagoid/estudio-up/compare/v1.0.0...v1.0.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* build da imagem no push de tags para gerar as tags de imagem corretas ([0612191](https://github.com/wagoid/estudio-up/commit/06121912cfaa0f69a039f9408e40e07390158a08))
+
 ## 1.0.0 (2024-08-21)
 
 
