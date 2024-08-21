@@ -12,6 +12,7 @@ import {
   saveRecording,
   getRecordings,
   GetRecordingsParams,
+  normalizeTextForTTS,
 } from '@/lib/modules/recordings/recordings.utils'
 import { redirect } from 'next/navigation'
 import {
@@ -23,7 +24,8 @@ import {
 } from './Recording.entity'
 import { audioUploadInput, azureVoices } from './recordings.constants'
 
-export const createInitialRecordingAction = async (title: string) => {
+export const createInitialRecordingAction = async (titleParam: string) => {
+  const title = normalizeTextForTTS(titleParam)
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, title, azureVoices.main.code)
 
@@ -129,10 +131,12 @@ export const upsertChapterAction = async (
   const {
     type,
     titleId: inputTitleId,
-    titleText,
+    titleText: titleTextParam,
     contentId: inputContentId,
-    contentText,
+    contentText: contentTextParam,
   } = formData
+  const titleText = titleTextParam && normalizeTextForTTS(titleTextParam)
+  const contentText = contentTextParam && normalizeTextForTTS(contentTextParam)
 
   const voice =
     type === 'content' ? azureVoices.main : azureVoices.imageDescription
@@ -218,8 +222,9 @@ export const deleteChapterAction = async (
 export const updateRecordingTitleAction = async (
   id: number,
   titleId: string,
-  titleText: string,
+  titleTextParam: string,
 ) => {
+  const titleText = normalizeTextForTTS(titleTextParam)
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, titleText, azureVoices.main.code)
   const recording = await getRecording(id)

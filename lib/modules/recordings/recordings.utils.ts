@@ -88,3 +88,12 @@ export const deleteRecording = async (id: number) => {
 
   await repository.delete(id)
 }
+
+const up = 'upê'
+
+export const normalizeTextForTTS = (text: string) => {
+  return text
+    .replaceAll(' UP ', ` ${up} `)
+    .replaceAll(' UP.', `${up}.`)
+    .replaceAll(' UP,', ` ${up},`)
+}
