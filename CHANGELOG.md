@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/wagoid/estudio-up/compare/v1.0.5...v1.0.6) (2024-08-21)
+
+
+### Bug Fixes
+
+* setup de build em ARM ([10580f0](https://github.com/wagoid/estudio-up/commit/10580f08870ced53d3b2011e4a3ba51333c5989e))
+
 ## [1.0.5](https://github.com/wagoid/estudio-up/compare/v1.0.4...v1.0.5) (2024-08-21)
 
 
