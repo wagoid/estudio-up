@@ -17,7 +17,7 @@ export const textToSpeech = async (
   )
   speechConfig.speechSynthesisLanguage = 'pt-BR'
   speechConfig.speechSynthesisOutputFormat =
-    SpeechSynthesisOutputFormat.Audio16Khz128KBitRateMonoMp3
+    SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3
   speechConfig.speechSynthesisVoiceName = voiceName
 
   const filename = `/tmp/${fileId}.mp3`
