@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/wagoid/estudio-up/compare/v1.0.6...v1.0.7) (2024-08-21)
+
+
+### Bug Fixes
+
+* mantem node_modules na imagem para utilizar a CLI do typeorm no init container ([e67f9c6](https://github.com/wagoid/estudio-up/commit/e67f9c6415925460fdb46f482c25527567907b42))
+
 ## [1.0.6](https://github.com/wagoid/estudio-up/compare/v1.0.5...v1.0.6) (2024-08-21)
 
 
