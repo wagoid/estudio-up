@@ -57,6 +57,8 @@ spec:
               value: estudio
             - name: POSTGRES_USER
               value: estudio
+            - name: AUTH_URL
+              value: https://estudio.uptec.top
             - name: AUTHENTIK_URL
               value: https://acesso.uptec.top
             - name: AZURE_TTS_ENDPOINT
