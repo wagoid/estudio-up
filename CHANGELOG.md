@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/wagoid/estudio-up/compare/v1.3.0...v1.4.0) (2024-08-21)
+
+
+### Features
+
+* diminui o bit rate para gerar arquivos menores ([c2365ea](https://github.com/wagoid/estudio-up/commit/c2365eaab2fd5470bb564f8c11d9d476ca98094d))
+
 ## [1.3.0](https://github.com/wagoid/estudio-up/compare/v1.2.0...v1.3.0) (2024-08-21)
 
 

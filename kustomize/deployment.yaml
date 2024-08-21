@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: estudio-migrate
-          image: ghcr.io/wagoid/estudio-up:v1.3.0 # {x-release-please-version}
+          image: ghcr.io/wagoid/estudio-up:v1.4.0 # {x-release-please-version}
           command: ['npm']
           args: ['run', 'migrate']
           envFrom:
@@ -33,7 +33,7 @@ spec:
               value: estudio
       containers:
         - name: estudio
-          image: ghcr.io/wagoid/estudio-up:v1.3.0 # {x-release-please-version}
+          image: ghcr.io/wagoid/estudio-up:v1.4.0 # {x-release-please-version}
           command: ['/sbin/tini']
           args: ['--', '/app/node_modules/.bin/next', 'start']
           ports:
