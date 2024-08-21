@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/wagoid/estudio-up/compare/v1.0.0...v1.1.0) (2024-08-21)
+
+
+### Features
+
+* atualiza fluxo de release ([7aead9e](https://github.com/wagoid/estudio-up/commit/7aead9e8bac8576af1eeba47aeb15372e5281c5c))
+
 ## 1.0.0 (2024-08-21)
 
 
