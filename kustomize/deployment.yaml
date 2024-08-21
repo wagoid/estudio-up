@@ -15,11 +15,9 @@ spec:
       labels:
         app: estudio
     spec:
-      imagePullSecrets:
-        - name: docker-cfg
       initContainers:
         - name: estudio-migrate
-          image: ghcr.io/wagoid/estudio-up:0.0.0
+          image: ghcr.io/wagoid/estudio-up:0.0.0 # {x-release-please-version}
           command: ['npm']
           args: ['run', 'migrate']
           envFrom:
@@ -36,7 +34,7 @@ spec:
               value: estudio
       containers:
         - name: estudio
-          image: ghcr.io/wagoid/estudio-up:0.0.0
+          image: ghcr.io/wagoid/estudio-up:0.0.0 # {x-release-please-version}
           command: ['node']
           args: ['server.js']
           ports:
