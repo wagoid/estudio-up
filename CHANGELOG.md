@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/wagoid/estudio-up/compare/v1.0.9...v1.1.0) (2024-08-21)
+
+
+### Features
+
+* adiciona annotations para certificados TLS ([7d641c8](https://github.com/wagoid/estudio-up/commit/7d641c8b1fc925ca5a309fe951590b6fa9d1995f))
+* remove sufixo redundante "-deployment" ([50ce292](https://github.com/wagoid/estudio-up/commit/50ce29217acf1cb8dca2902c60b2ce73ef325d19))
+
 ## [1.0.9](https://github.com/wagoid/estudio-up/compare/v1.0.8...v1.0.9) (2024-08-21)
 
 
