@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/wagoid/estudio-up/compare/v1.1.1...v1.2.0) (2024-08-21)
+
+
+### Features
+
+* adiciona suporte a pesquisa por título ([445d02e](https://github.com/wagoid/estudio-up/commit/445d02e9670a20eb4c6f0ef5cc146944f281e003))
+
 ## [1.1.1](https://github.com/wagoid/estudio-up/compare/v1.1.0...v1.1.1) (2024-08-21)
 
 
