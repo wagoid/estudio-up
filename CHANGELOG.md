@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/wagoid/estudio-up/compare/v1.0.2...v1.0.3) (2024-08-21)
+
+
+### Bug Fixes
+
+* remove namespace dos manifests pois é definido pelo flux ([03330ae](https://github.com/wagoid/estudio-up/commit/03330aeafd1879f5a01b4c22049509504b2d007a))
+
 ## [1.0.2](https://github.com/wagoid/estudio-up/compare/v1.0.1...v1.0.2) (2024-08-21)
 
 
