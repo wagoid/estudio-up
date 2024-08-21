@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/wagoid/estudio-up/compare/v1.0.4...v1.0.5) (2024-08-21)
+
+
+### Bug Fixes
+
+* build da imagem na plataforma arm64 ([7e52f2f](https://github.com/wagoid/estudio-up/commit/7e52f2f1353ae3a11dcc6d3e3e53ca6fb8e1d80b))
+
 ## [1.0.4](https://github.com/wagoid/estudio-up/compare/v1.0.3...v1.0.4) (2024-08-21)
 
 
