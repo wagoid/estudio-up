@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/wagoid/estudio-up/compare/v1.0.7...v1.0.8) (2024-08-21)
+
+
+### Bug Fixes
+
+* adiciona tini e corrige script de migration ([b15e929](https://github.com/wagoid/estudio-up/commit/b15e9296041e23d96cf91d7dfa9184231fa9b3b6))
+
 ## [1.0.7](https://github.com/wagoid/estudio-up/compare/v1.0.6...v1.0.7) (2024-08-21)
 
 
