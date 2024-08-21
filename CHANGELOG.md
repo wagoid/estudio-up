@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/wagoid/estudio-up/compare/v1.1.0...v1.1.1) (2024-08-21)
+
+
+### Bug Fixes
+
+* annotations movidas para metadata do ingress ([6012aeb](https://github.com/wagoid/estudio-up/commit/6012aeb499f9c1e7636cb14cb09b10742a2f89ce))
+
 ## [1.1.0](https://github.com/wagoid/estudio-up/compare/v1.0.9...v1.1.0) (2024-08-21)
 
 
