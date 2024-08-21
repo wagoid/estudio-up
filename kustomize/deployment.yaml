@@ -26,7 +26,7 @@ spec:
             - name: POSTGRES_HOST
               value: cnpg-cluster-postgres-cluster-rw.cnpg-database
             - name: POSTGRES_PORT
-              value: '5433'
+              value: '5432'
             - name: POSTGRES_DATABASE
               value: estudio
             - name: POSTGRES_USER
@@ -34,8 +34,8 @@ spec:
       containers:
         - name: estudio
           image: ghcr.io/wagoid/estudio-up:v1.0.7 # {x-release-please-version}
-          command: ['node']
-          args: ['server.js']
+          command: ['/sbin/tini']
+          args: ['--', '/app/node_modules/.bin/next', 'start']
           ports:
             - containerPort: 3000
           resources:
@@ -52,7 +52,7 @@ spec:
             - name: POSTGRES_HOST
               value: cnpg-cluster-postgres-cluster-rw.cnpg-database
             - name: POSTGRES_PORT
-              value: '5433'
+              value: '5432'
             - name: POSTGRES_DATABASE
               value: estudio
             - name: POSTGRES_USER
