@@ -4,8 +4,8 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "next lint",
-    "migrate": "node-pg-migrate",
-    "typeorm": "dotenv  -- typeorm-ts-node-commonjs"
+    "migrate": "typeorm-ts-node-commonjs -d data-source.ts migration:run",
+    "typeorm": "dotenv -- typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.623.0",
@@ -26,7 +26,6 @@
     "nanoid": "^5.0.7",
     "next": "^14.2.5",
     "next-auth": "^5.0.0-beta.20",
-    "node-pg-migrate": "^7.6.1",
     "p-retry": "^6.2.0",
     "pg": "^8.4.0",
     "pg-pool": "^3.6.2",
@@ -38,6 +37,7 @@
     "reflect-metadata": "^0.1.14",
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
+    "ts-node": "^10.9.2",
     "typeorm": "^0.3.20",
     "typescript": "5.5.3",
     "zod": "^3.23.8"
@@ -53,7 +53,6 @@
     "@types/pg": "^8.11.6",
     "@types/pg-pool": "^2.0.6",
     "dotenv-cli": "^7.4.2",
-    "ts-node": "10.9.1",
     "typescript": "4.5.2"
   }
 }

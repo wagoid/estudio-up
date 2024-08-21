@@ -17,6 +17,23 @@ spec:
     spec:
       imagePullSecrets:
         - name: docker-cfg
+      initContainers:
+        - name: estudio-migrate
+          image: ghcr.io/wagoid/estudio-up:0.0.0
+          command: ['npm']
+          args: ['run', 'migrate']
+          envFrom:
+            - secretRef:
+                name: estudio-secrets
+          env:
+            - name: POSTGRES_HOST
+              value: cnpg-cluster-postgres-cluster-rw.cnpg-database
+            - name: POSTGRES_PORT
+              value: '5433'
+            - name: POSTGRES_DATABASE
+              value: estudio
+            - name: POSTGRES_USER
+              value: estudio
       containers:
         - name: estudio
           image: ghcr.io/wagoid/estudio-up:0.0.0
@@ -35,8 +52,6 @@ spec:
             - secretRef:
                 name: estudio-secrets
           env:
-            - name: HOSTNAME
-              value: '0.0.0.0'
             - name: POSTGRES_HOST
               value: cnpg-cluster-postgres-cluster-rw.cnpg-database
             - name: POSTGRES_PORT
@@ -45,6 +60,8 @@ spec:
               value: estudio
             - name: POSTGRES_USER
               value: estudio
+            - name: HOSTNAME
+              value: '0.0.0.0'
             - name: AUTHENTIK_URL
               value: https://acesso.uptec.top
             - name: AZURE_TTS_ENDPOINT
