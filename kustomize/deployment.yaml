@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: estudio-deployment
-  namespace: apps
   labels:
     app: estudio
 spec:
