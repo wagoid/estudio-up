@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/wagoid/estudio-up/compare/v1.0.3...v1.0.4) (2024-08-21)
+
+
+### Bug Fixes
+
+* correção na referência da tag da imagem ([71afcba](https://github.com/wagoid/estudio-up/commit/71afcbadf6f92493e9b3cc658007d27cc9570e84))
+
 ## [1.0.3](https://github.com/wagoid/estudio-up/compare/v1.0.2...v1.0.3) (2024-08-21)
 
 
