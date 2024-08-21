@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.9](https://github.com/wagoid/estudio-up/compare/v1.0.8...v1.0.9) (2024-08-21)
+
+
+### Bug Fixes
+
+* remove bash do Dockerfile ([1c6f1dc](https://github.com/wagoid/estudio-up/commit/1c6f1dccf8cde573fcd7f0067f78916bf434d5bd))
+
 ## [1.0.8](https://github.com/wagoid/estudio-up/compare/v1.0.7...v1.0.8) (2024-08-21)
 
 
