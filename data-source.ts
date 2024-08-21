@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm'
 import { Recording } from './lib/modules/recordings/Recording.entity'
 import { requiredEnvVar } from './lib/env'
 import { CreateRecording1723050027208 } from './migrations/1723050027208-CreateRecording'
+import { AddTitleIndex1724270542109 } from './migrations/1724270542109-AddTitleIndex'
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -14,6 +15,6 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: false,
   entities: [Recording],
-  migrations: [CreateRecording1723050027208],
+  migrations: [CreateRecording1723050027208, AddTitleIndex1724270542109],
   subscribers: [],
 })

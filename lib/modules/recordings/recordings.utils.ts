@@ -33,15 +33,30 @@ export const saveRecording = async (recording: Recording) => {
   return repository.save(recording)
 }
 
+export type GetRecordingsParams = {
+  query?: string
+}
+
 export const getRecordings = async (
   pagination: PaginationParams,
+  { query }: GetRecordingsParams,
 ): Promise<{ recordings: Recording[]; pagination: PaginationResponse }> => {
   const repository = await getRepository()
   const page = pagination.page || 1
   const pageSize = pagination.pageSize || 25
 
-  const [recordings, totalResults] = await repository
-    .createQueryBuilder()
+  let queryBuilder = repository.createQueryBuilder()
+
+  if (query) {
+    queryBuilder = queryBuilder.where(
+      "data->'title'->>'text' ILIKE '%' || :query || '%'",
+      {
+        query,
+      },
+    )
+  }
+
+  const [recordings, totalResults] = await queryBuilder
     .skip((page - 1) * pageSize)
     .take(pageSize)
     .getManyAndCount()

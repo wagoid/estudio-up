@@ -11,6 +11,7 @@ import {
   deleteRecording,
   saveRecording,
   getRecordings,
+  GetRecordingsParams,
 } from '@/lib/modules/recordings/recordings.utils'
 import { redirect } from 'next/navigation'
 import {
@@ -59,8 +60,9 @@ export const getRecordingAction = async (
 
 export const getRecordingsAction = async (
   pagination: PaginationParams,
+  params: GetRecordingsParams,
 ): Promise<{ recordings: RecordingObj[]; pagination: PaginationResponse }> => {
-  const result = await getRecordings(pagination)
+  const result = await getRecordings(pagination, params)
 
   return {
     ...result,

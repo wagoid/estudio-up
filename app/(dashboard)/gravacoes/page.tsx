@@ -20,10 +20,12 @@ import { RecordingsPagination } from './_components/RecordingsPatination'
 import { getRecordingsAction } from '@/lib/modules/recordings/recordings.actions'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
 import { RecordingFileInfo } from './_components/RecordingFileInfo'
+import { RecordingsSearch } from './_components/RecordingsSearch'
 
 type RecordingsPageProps = {
   searchParams: {
     page?: string
+    query?: string
   }
 }
 
@@ -35,16 +37,22 @@ export default async function RecordingsPage({
   const {
     recordings,
     pagination: { totalResults },
-  } = await getRecordingsAction({
-    page,
-    pageSize,
-  })
+  } = await getRecordingsAction(
+    {
+      page,
+      pageSize,
+    },
+    {
+      query: searchParams.query,
+    },
+  )
 
   return (
     <Container component={Stack}>
       <Link href="/gravacoes/criar" legacyBehavior passHref>
         <Button variant="contained">Criar gravação</Button>
       </Link>
+      <RecordingsSearch />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

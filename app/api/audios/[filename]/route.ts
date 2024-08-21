@@ -20,7 +20,7 @@ export async function GET(
     response.headers.set('content-length', file.ContentLength.toString())
   }
 
-  response.headers.set('cache-control', 'max-age=31536000')
+  response.headers.set('cache-control', 'public, max-age=31536000, immutable')
 
   return response
 }

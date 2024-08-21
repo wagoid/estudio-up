@@ -44,7 +44,7 @@ export interface RecordingObj {
 @Entity({
   name: 'recording',
   orderBy: {
-    id: 'ASC',
+    id: 'DESC',
   },
 })
 export class Recording implements RecordingObj {
