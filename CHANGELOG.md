@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/wagoid/estudio-up/compare/v1.2.0...v1.3.0) (2024-08-21)
+
+
+### Features
+
+* adiciona cache no docker build ([4042d90](https://github.com/wagoid/estudio-up/commit/4042d90a7d3276980abb3e0874e40aa5465e3611))
+* normaliza textos para melhor geração de audios ([560186e](https://github.com/wagoid/estudio-up/commit/560186e5936293bd993a5696445be3ae2ffd5c79))
+
 ## [1.2.0](https://github.com/wagoid/estudio-up/compare/v1.1.1...v1.2.0) (2024-08-21)
 
 
