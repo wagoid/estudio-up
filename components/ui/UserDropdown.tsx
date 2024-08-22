@@ -28,6 +28,7 @@ export const UserDropdown: FC<{ user?: User }> = ({ user }) => {
           src={
             user?.image ?? `https://ui-avatars.com/api/?name=${userInitials}`
           }
+          unoptimized
           width={36}
           height={36}
           alt="Imagem do usuário"
