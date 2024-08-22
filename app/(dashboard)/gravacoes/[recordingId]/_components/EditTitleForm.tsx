@@ -22,7 +22,7 @@ type FormValues = z.infer<typeof schema>
 
 type EditTitleFormProps = {
   recording: RecordingObj
-  objectStoreUrl
+  objectStoreUrl: string
 }
 
 export const EditTitleForm: FC<EditTitleFormProps> = ({
