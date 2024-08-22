@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/wagoid/estudio-up/compare/v1.5.1...v1.5.2) (2024-08-22)
+
+
+### Bug Fixes
+
+* remove otimização desnecessária de imagem de avatar ([d210a04](https://github.com/wagoid/estudio-up/commit/d210a044822bc47899c8a7ff43d05b3725dc8eb4))
+
 ## [1.5.1](https://github.com/wagoid/estudio-up/compare/v1.5.0...v1.5.1) (2024-08-22)
 
 
