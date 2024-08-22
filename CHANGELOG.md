@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/wagoid/estudio-up/compare/v1.5.0...v1.5.1) (2024-08-22)
+
+
+### Bug Fixes
+
+* erro de typescript na build ([0512eb0](https://github.com/wagoid/estudio-up/commit/0512eb02cb64c5622be2490c0a14307f1b80cf2f))
+
 ## [1.5.0](https://github.com/wagoid/estudio-up/compare/v1.4.0...v1.5.0) (2024-08-22)
 
 
