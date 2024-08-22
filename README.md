@@ -10,11 +10,9 @@ Este projeto usa as seguintes ferramentas:
 - Formulários - [React Hook Form](https://react-hook-form.com) e [zod](https://zod.dev)
 - Analytics - [Vercel Analytics](https://vercel.com/analytics)
 - Formatação - [Prettier](https://prettier.io)
-- Deployment - TODO
+- Deployment - Os manifests do Kubernetes estão na pasta [kustomize](https://github.com/wagoid/estudio-up/tree/main/kustomize). Fluxo de CD utiliza Github Actions: [Release Please](https://github.com/googleapis/release-please-action) + [build-push-action](https://github.com/docker/build-push-action)
 
-This template uses the new Next.js App Router. This includes support for enhanced layouts, colocation of components, tests, and styles, component-level data fetching, and more.
-
-## Rodando a aplicação
+## Rodando a aplicação localmente
 
 Instale [Docker](https://www.docker.com), e execute o seguinte para rodar o banco de dados e object store (S3):
 
@@ -22,16 +20,22 @@ Instale [Docker](https://www.docker.com), e execute o seguinte para rodar o banc
 docker compose up
 ```
 
-Execute as migrations para initializar as tabelas do banco de dados.
+Instale as dependências:
+```
+npm install
+```
+
+Execute as migrations para inicializar as tabelas do banco de dados.
 
 ```sh
 npm run typeorm -- -d data-source.ts migration:run
 ```
 
+Solicite outra pessoa os valores para preencher o `.env.local`.
+
 Inicie o servidor de desenvolvimento:
 
 ```sh
-npm install
 npm dev
 ```
 
