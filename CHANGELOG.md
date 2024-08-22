@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/wagoid/estudio-up/compare/v1.4.0...v1.5.0) (2024-08-22)
+
+
+### Features
+
+* utiliza o endpoint da object store diretamente ([3db4bd1](https://github.com/wagoid/estudio-up/commit/3db4bd1b26b8c7e96a0092095ab520ca78eedcae))
+
 ## [1.4.0](https://github.com/wagoid/estudio-up/compare/v1.3.0...v1.4.0) (2024-08-21)
 
 
