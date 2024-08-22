@@ -1,17 +1,23 @@
 import { Audio } from '@/lib/modules/recordings/Recording.entity'
+import { buildAudioUrl } from '@/lib/urls'
 import { CSSProperties, FC } from 'react'
 
 type AudioPlayerProps = {
   audio: Pick<Audio, 'fileId'>
   style?: CSSProperties
+  objectStoreUrl: string
 }
 
-export const AudioPlayer: FC<AudioPlayerProps> = ({ audio, style }) => (
+export const AudioPlayer: FC<AudioPlayerProps> = ({
+  audio,
+  style,
+  objectStoreUrl,
+}) => (
   <audio
     controls
     style={{ display: 'inline-block', ...style }}
     key={audio.fileId}
   >
-    <source src={`/api/audios/${audio.fileId}.mp3`} type="audio/mpeg" />
+    <source src={buildAudioUrl(audio, objectStoreUrl)} type="audio/mpeg" />
   </audio>
 )

@@ -18,9 +18,9 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { RecordingsPagination } from './_components/RecordingsPatination'
 import { getRecordingsAction } from '@/lib/modules/recordings/recordings.actions'
-import { AudioPlayer } from '@/components/ui/AudioPlayer'
 import { RecordingFileInfo } from './_components/RecordingFileInfo'
 import { RecordingsSearch } from './_components/RecordingsSearch'
+import { unstable_noStore as noStore } from 'next/cache'
 
 type RecordingsPageProps = {
   searchParams: {
@@ -32,6 +32,8 @@ type RecordingsPageProps = {
 export default async function RecordingsPage({
   searchParams,
 }: RecordingsPageProps) {
+  noStore()
+  const objectStoreUrl = process.env.AWS_S3_PUBLIC_URL as string
   const page = Number.parseInt(searchParams.page ?? '1') || 1
   const pageSize = 25
   const {
@@ -69,7 +71,11 @@ export default async function RecordingsPage({
                   {recording.data.title.text}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  <RecordingFileInfo inline recording={recording} />
+                  <RecordingFileInfo
+                    inline
+                    recording={recording}
+                    objectStoreUrl={objectStoreUrl}
+                  />
                 </TableCell>
                 <TableCell align="right">
                   <Stack direction="row" spacing={0} justifyContent="flex-end">

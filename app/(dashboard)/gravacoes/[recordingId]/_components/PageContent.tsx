@@ -17,28 +17,21 @@ import { useRouter } from 'next/navigation'
 import { GenerateMergedAudioButton } from './GenerateMergedAudioButton'
 import { EditTitleForm } from './EditTitleForm'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
-import { buildAudioPath } from '@/lib/urls'
 import { RecordingFileInfo } from '../../_components/RecordingFileInfo'
 
 type PageContentProps = {
   recording: RecordingObj
+  objectStoreUrl: string
 }
 
-export const PageContent: FC<PageContentProps> = ({ recording }) => {
-  const [isClient, setIsClient] = useState(false)
-  const { chapters, fileId } = recording.data
+export const PageContent: FC<PageContentProps> = ({
+  recording,
+  objectStoreUrl,
+}) => {
+  const { chapters } = recording.data
   const [editingChapters, setEditingChapters] =
     useState<EditingChapter[]>(chapters)
   const router = useRouter()
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  const finalAudioUrl =
-    isClient &&
-    fileId &&
-    `${window.location.origin}${buildAudioPath({ fileId })}`
 
   useEffect(() => {
     setEditingChapters(chapters)
@@ -60,7 +53,10 @@ export const PageContent: FC<PageContentProps> = ({ recording }) => {
       <Card>
         <CardHeader title="Editar título" />
         <CardContent>
-          <EditTitleForm recording={recording} />
+          <EditTitleForm
+            recording={recording}
+            objectStoreUrl={objectStoreUrl}
+          />
         </CardContent>
       </Card>
       <Card>
@@ -72,6 +68,7 @@ export const PageContent: FC<PageContentProps> = ({ recording }) => {
               chapter={draftChapter}
               recording={recording}
               onRemove={onRemoveChapter}
+              objectStoreUrl={objectStoreUrl}
             />
           ))}
         </CardContent>
@@ -104,8 +101,12 @@ export const PageContent: FC<PageContentProps> = ({ recording }) => {
         recording={recording}
         disabled={editingChapters.some((chapter) => chapter.isDraft)}
         sx={{ alignSelf: 'flex-start' }}
+        objectStoreUrl={objectStoreUrl}
       />
-      <RecordingFileInfo recording={recording} />
+      <RecordingFileInfo
+        recording={recording}
+        objectStoreUrl={objectStoreUrl}
+      />
     </Stack>
   )
 }

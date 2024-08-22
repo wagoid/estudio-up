@@ -34,12 +34,14 @@ type EditChapterFormProps = {
   chapter: EditingChapter
   recording: RecordingObj
   onRemove: (chapter: EditingChapter) => Promise<void>
+  objectStoreUrl: string
 }
 
 export const EditChapterForm: FC<EditChapterFormProps> = ({
   chapter,
   recording,
   onRemove,
+  objectStoreUrl,
 }) => {
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -97,7 +99,7 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           defaultValue={chapter.title?.text ?? ''}
         />
         {!chapter.isDraft && chapter.title && (
-          <AudioPlayer audio={chapter.title} />
+          <AudioPlayer audio={chapter.title} objectStoreUrl={objectStoreUrl} />
         )}
         <FormTextField
           name="content"
@@ -109,7 +111,12 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           required
           defaultValue={chapter.content.text}
         />
-        {!chapter.isDraft && <AudioPlayer audio={chapter.content} />}
+        {!chapter.isDraft && (
+          <AudioPlayer
+            audio={chapter.content}
+            objectStoreUrl={objectStoreUrl}
+          />
+        )}
         <FormTextField
           type="hidden"
           name="type"

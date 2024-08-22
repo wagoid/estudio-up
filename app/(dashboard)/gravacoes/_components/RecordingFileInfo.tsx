@@ -2,15 +2,17 @@
 
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
-import { buildAudioPath } from '@/lib/urls'
+import { buildAudioUrl } from '@/lib/urls'
 import { Link, Stack, Typography } from '@mui/material'
 import { FC, useEffect, useState } from 'react'
 
 export const RecordingFileInfo: FC<{
   recording: RecordingObj
+  objectStoreUrl: string
   inline?: boolean
 }> = ({
   inline,
+  objectStoreUrl,
   recording: {
     data: { fileId },
   },
@@ -18,9 +20,7 @@ export const RecordingFileInfo: FC<{
   const [isClient, setIsClient] = useState(false)
 
   const finalAudioUrl =
-    isClient &&
-    fileId &&
-    `${window.location.origin}${buildAudioPath({ fileId })}`
+    isClient && fileId && buildAudioUrl({ fileId }, objectStoreUrl)
 
   useEffect(() => {
     setIsClient(true)
@@ -31,7 +31,7 @@ export const RecordingFileInfo: FC<{
   if (inline) {
     return (
       <Stack direction="row" alignItems="center">
-        <AudioPlayer audio={{ fileId }} />
+        <AudioPlayer audio={{ fileId }} objectStoreUrl={objectStoreUrl} />
         <Link
           target="_blank"
           prefetch={false}
@@ -48,7 +48,7 @@ export const RecordingFileInfo: FC<{
     <>
       <Stack direction="row" alignItems="center">
         <Typography>Áudio final:</Typography>
-        <AudioPlayer audio={{ fileId }} />
+        <AudioPlayer audio={{ fileId }} objectStoreUrl={objectStoreUrl} />
       </Stack>
       <span>
         Link do áudio final:{' '}

@@ -1,6 +1,6 @@
 'use client'
 
-import { buildAudioPath } from '@/lib/urls'
+import { buildAudioUrl } from '@/lib/urls'
 import { Button, ButtonProps } from '@mui/material'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 import Crunker from 'crunker'
@@ -9,26 +9,30 @@ import { uploadMergedAudioAction } from '@/lib/modules/recordings/recordings.act
 import { useRouter } from 'next/navigation'
 
 export const GenerateMergedAudioButton: FC<
-  Omit<ButtonProps, 'onClick'> & { recording: RecordingObj }
+  Omit<ButtonProps, 'onClick'> & {
+    recording: RecordingObj
+    objectStoreUrl: string
+  }
 > = ({
   recording: {
     id,
     data: { title, chapters },
   },
+  objectStoreUrl,
   ...otherProps
 }) => {
   const router = useRouter()
 
   const generateMergedAudio = async () => {
     const crunker = new Crunker()
-    const titlePath = buildAudioPath(title)
+    const titleUrl = buildAudioUrl(title, objectStoreUrl)
     const chapterPaths = chapters
       .flatMap((chapter) =>
         chapter.title ? [chapter.title, chapter.content] : chapter.content,
       )
-      .map(buildAudioPath)
+      .map((chapter) => buildAudioUrl(chapter, objectStoreUrl))
 
-    const fetchedAudios = await crunker.fetchAudio(titlePath, ...chapterPaths)
+    const fetchedAudios = await crunker.fetchAudio(titleUrl, ...chapterPaths)
     const output = crunker.export(
       crunker.concatAudio(fetchedAudios),
       'audio/mp3',

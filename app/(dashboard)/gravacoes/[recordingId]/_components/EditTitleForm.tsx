@@ -22,6 +22,7 @@ type FormValues = z.infer<typeof schema>
 
 type EditTitleFormProps = {
   recording: RecordingObj
+  objectStoreUrl
 }
 
 export const EditTitleForm: FC<EditTitleFormProps> = ({
@@ -29,6 +30,7 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({
     id,
     data: { title },
   },
+  objectStoreUrl,
 }) => {
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -48,7 +50,7 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({
     <Box component="form" noValidate autoComplete="off" onSubmit={onSubmit}>
       <Stack alignItems="flex-start">
         <FormTextField name="title" label="Título" control={control} required />
-        <AudioPlayer audio={title} />
+        <AudioPlayer audio={title} objectStoreUrl={objectStoreUrl} />
         <FormSubmitButton control={control}>Gerar áudio</FormSubmitButton>
       </Stack>
     </Box>
