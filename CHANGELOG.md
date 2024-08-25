@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/wagoid/estudio-up/compare/v1.5.2...v1.6.0) (2024-08-25)
+
+
+### Features
+
+* adiciona campo para o tipo de capítulo (Conteúdo ou Descrição de imagem) ([ceb60d7](https://github.com/wagoid/estudio-up/commit/ceb60d7d7e9c7fe2e4f03d3f7acc8793fbc93f4d))
+
 ## [1.5.2](https://github.com/wagoid/estudio-up/compare/v1.5.1...v1.5.2) (2024-08-22)
 
 
