@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/wagoid/estudio-up/compare/v1.6.0...v1.7.0) (2024-08-25)
+
+
+### Features
+
+* remove áudio anterior após gerar o novo áudio final ([5bb922b](https://github.com/wagoid/estudio-up/commit/5bb922b925e0f3952591cb486d43e2c6903e61e3))
+
 ## [1.6.0](https://github.com/wagoid/estudio-up/compare/v1.5.2...v1.6.0) (2024-08-25)
 
 
