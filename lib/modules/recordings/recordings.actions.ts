@@ -268,12 +268,17 @@ export const uploadMergedAudioAction = async (
   const fileId = generateId()
 
   const recording = await getRecording(id)
+  const previousFileId = recording.data.fileId
 
   await uploadFile(
     buildAudioFilePath(fileId),
     (await file.arrayBuffer()) as Buffer,
     audioUploadInput,
   )
+
+  if (previousFileId) {
+    await deleteFile(buildAudioFilePath(previousFileId))
+  }
 
   recording.data.fileId = fileId
 
