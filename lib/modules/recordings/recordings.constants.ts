@@ -7,7 +7,7 @@ const mainVoice: Voice = {
 
 const imageDescriptionVoice: Voice = {
   source: 'azure',
-  code: 'pt-BR-ThalitaNeural',
+  code: 'pt-BR-AntonioNeural',
 }
 
 export const azureVoices = {

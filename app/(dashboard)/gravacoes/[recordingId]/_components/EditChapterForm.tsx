@@ -2,7 +2,7 @@ import { Audio, ChapterType } from '@/lib/modules/recordings/Recording.entity'
 import { Box, IconButton, Paper, Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { FormTextField } from '@/components/ui/FormTextField'
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
 import { upsertChapterAction } from '@/lib/modules/recordings/recordings.actions'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -12,6 +12,10 @@ import { requiredString } from '@/lib/validation'
 import { FormSubmitButton } from '@/components/ui/FormSubmitButton'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
+import {
+  FormRadioGroup,
+  RadioGroupOption,
+} from '@/components/ui/FormRadioGroup'
 
 type DraftAudio = Omit<Audio, 'voice'>
 
@@ -37,22 +41,40 @@ type EditChapterFormProps = {
   objectStoreUrl: string
 }
 
+const defaultImageDescriptionTitle = 'Descrição de imagem'
+
+const contentChapterType: ChapterType = 'content'
+const imageDescriptionChapterType: ChapterType = 'image_description'
+
+const chapterTypeOptions: RadioGroupOption[] = [
+  {
+    value: contentChapterType,
+    label: 'Conteúdo',
+  },
+  {
+    value: imageDescriptionChapterType,
+    label: 'Descrição de imagem',
+  },
+]
+
 export const EditChapterForm: FC<EditChapterFormProps> = ({
   chapter,
   recording,
   onRemove,
   objectStoreUrl,
 }) => {
-  const { control, handleSubmit } = useForm<FormValues>({
-    defaultValues: {
-      type: chapter.type,
-      title: chapter.title?.text ?? '',
-      content: chapter.content.text,
-    },
-    resolver: zodResolver(schema),
-    mode: 'onBlur',
-  })
+  const { control, handleSubmit, watch, getValues, setValue } =
+    useForm<FormValues>({
+      defaultValues: {
+        type: chapter.type,
+        title: chapter.title?.text ?? '',
+        content: chapter.content.text,
+      },
+      resolver: zodResolver(schema),
+      mode: 'onBlur',
+    })
   const router = useRouter()
+  const chapterType = watch('type')
 
   const onSubmit = handleSubmit(async (formData) => {
     await upsertChapterAction(recording.id, {
@@ -64,6 +86,19 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
     })
     router.refresh()
   })
+
+  useEffect(() => {
+    const title = getValues('title')
+
+    if (chapterType === imageDescriptionChapterType && !title) {
+      setValue('title', defaultImageDescriptionTitle)
+    } else if (
+      chapterType === contentChapterType &&
+      title === defaultImageDescriptionTitle
+    ) {
+      setValue('title', '')
+    }
+  }, [chapterType, getValues, setValue])
 
   return (
     <Box
@@ -92,12 +127,13 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
         padding={2}
         variant="outlined"
       >
-        <FormTextField
-          name="title"
-          label="Título"
+        <FormRadioGroup
           control={control}
-          defaultValue={chapter.title?.text ?? ''}
+          name="type"
+          label="Tipo do capítulo"
+          options={chapterTypeOptions}
         />
+        <FormTextField name="title" label="Título" control={control} />
         {!chapter.isDraft && chapter.title && (
           <AudioPlayer audio={chapter.title} objectStoreUrl={objectStoreUrl} />
         )}
@@ -109,7 +145,6 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           minRows={2}
           control={control}
           required
-          defaultValue={chapter.content.text}
         />
         {!chapter.isDraft && (
           <AudioPlayer
@@ -117,12 +152,6 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
             objectStoreUrl={objectStoreUrl}
           />
         )}
-        <FormTextField
-          type="hidden"
-          name="type"
-          defaultValue={chapter.type}
-          control={control}
-        />
         <FormSubmitButton control={control}>Gerar áudio</FormSubmitButton>
       </Stack>
     </Box>

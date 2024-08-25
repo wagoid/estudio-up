@@ -156,7 +156,7 @@ export const upsertChapterAction = async (
       : inputContentId
 
   const chapterToUpsert: Chapter = {
-    type: 'content',
+    type,
     content: await buildContentAudio(
       voice,
       inputContentId,
