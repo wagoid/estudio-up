@@ -142,10 +142,17 @@ export type GenerateChapterAudioData = {
 
 export const generateChapterAudioAction = async (
   recordingId: number,
-  { type, id, titleText, contentText }: GenerateChapterAudioData,
+  {
+    type,
+    id,
+    titleText: titleTextParam,
+    contentText: contentTextParam,
+  }: GenerateChapterAudioData,
 ) => {
   console.log(`generating chapter audio ${id} for recording ${recordingId}`)
 
+  const titleText = titleTextParam && normalizeTextForTTS(titleTextParam)
+  const contentText = contentTextParam && normalizeTextForTTS(contentTextParam)
   const recording = await getRecording(recordingId)
   const voice =
     type === 'content' ? azureVoices.main : azureVoices.imageDescription

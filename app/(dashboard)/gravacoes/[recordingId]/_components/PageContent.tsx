@@ -37,6 +37,7 @@ export const PageContent: FC<PageContentProps> = ({
   const hasDraftChapter = editingChapters.some((chapter) => !chapter.id)
   const hasMissingAudio =
     !recording.data.title.fileId ||
+    !editingChapters.length ||
     editingChapters.some(
       (chapter) => !chapter.title?.fileId && !chapter.content.fileId,
     )
