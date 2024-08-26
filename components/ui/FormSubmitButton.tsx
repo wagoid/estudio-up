@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@mui/material'
+import { Button, ButtonProps, CircularProgress } from '@mui/material'
 import { Control, FieldValues, useFormState } from 'react-hook-form'
 
 export const FormSubmitButton = <TFieldValues extends FieldValues>({
@@ -16,6 +16,7 @@ export const FormSubmitButton = <TFieldValues extends FieldValues>({
       variant="contained"
       type="submit"
       disabled={(!disableDirtyCheck && !isDirty) || isSubmitting || !isValid}
+      endIcon={isSubmitting ? <CircularProgress size={16} /> : undefined}
       {...otherProps}
     />
   )
