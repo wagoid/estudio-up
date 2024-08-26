@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.0](https://github.com/wagoid/estudio-up/compare/v1.7.3...v1.8.0) (2024-08-26)
+
+
+### Features
+
+* remove vercel analytics ([d6e026c](https://github.com/wagoid/estudio-up/commit/d6e026c4548215d100d4b8c80a12f6fad4fc46e4))
+* só habilita geração de áudio final com pelo menos um capítulo criado ([a279016](https://github.com/wagoid/estudio-up/commit/a279016dc6ac2f656f09025eeab2beda289af8ad))
+
 ## [1.7.3](https://github.com/wagoid/estudio-up/compare/v1.7.2...v1.7.3) (2024-08-26)
 
 
