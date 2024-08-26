@@ -34,7 +34,7 @@ spec:
       containers:
         - name: estudio
           image: ghcr.io/wagoid/estudio-up:v1.7.2 # {x-release-please-version}
-          command: ['/sbin/tini']
+          command: ['/usr/bin/tini']
           args: ['--', '/app/node_modules/.bin/next', 'start']
           ports:
             - containerPort: 3000
