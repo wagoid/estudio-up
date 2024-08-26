@@ -25,11 +25,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN apt-get -y update && \
-    apt-get -y upgrade && \
-    apt-get install -y mp3wrap && \
-    apt-get clean -y
-
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
@@ -47,7 +42,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get install -y tini && \
+    apt-get install -y tini mp3wrap && \
     apt-get clean -y
 
 COPY --from=builder /app/public ./public
