@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/wagoid/estudio-up/compare/v1.7.0...v1.7.1) (2024-08-26)
+
+
+### Performance Improvements
+
+* remove todos os arquivos de audio separados ao gerar o arquivo final ([a7d01da](https://github.com/wagoid/estudio-up/commit/a7d01da3bc81b5cbe7581f4334915f669a3d84cb))
+
 ## [1.7.0](https://github.com/wagoid/estudio-up/compare/v1.6.0...v1.7.0) (2024-08-25)
 
 
