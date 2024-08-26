@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/wagoid/estudio-up/compare/v1.7.1...v1.7.2) (2024-08-26)
+
+
+### Bug Fixes
+
+* permissões no Dockerfile de acordo com a imagem Debian ([99a1971](https://github.com/wagoid/estudio-up/commit/99a19715e1c9f444cb387ef3452f6903bcc3f3e5))
+
 ## [1.7.1](https://github.com/wagoid/estudio-up/compare/v1.7.0...v1.7.1) (2024-08-26)
 
 
