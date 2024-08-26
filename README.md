@@ -8,7 +8,6 @@ Este projeto usa as seguintes ferramentas:
 - Banco de dados - [PostgreSQL](https://www.postgresql.org)
 - Componentes de UI - [Material UI](https://mui.com/material-ui)
 - Formulários - [React Hook Form](https://react-hook-form.com) e [zod](https://zod.dev)
-- Analytics - [Vercel Analytics](https://vercel.com/analytics)
 - Formatação - [Prettier](https://prettier.io)
 - Deployment - Os manifests do Kubernetes estão na pasta [kustomize](https://github.com/wagoid/estudio-up/tree/main/kustomize). Fluxo de CD utiliza Github Actions: [Release Please](https://github.com/googleapis/release-please-action) + [build-push-action](https://github.com/docker/build-push-action)
 
