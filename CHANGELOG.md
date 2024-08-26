@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/wagoid/estudio-up/compare/v1.8.0...v1.9.0) (2024-08-26)
+
+
+### Features
+
+* adiciona spinner no FormSubmitButton ([eda73ff](https://github.com/wagoid/estudio-up/commit/eda73ff82cf6be88842107d402d547441427d437))
+
 ## [1.8.0](https://github.com/wagoid/estudio-up/compare/v1.7.3...v1.8.0) (2024-08-26)
 
 
