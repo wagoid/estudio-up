@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.3](https://github.com/wagoid/estudio-up/compare/v1.7.2...v1.7.3) (2024-08-26)
+
+
+### Bug Fixes
+
+* mp3wrap estava sendo instalada no estágio errado do Dockerfile ([d41ccc4](https://github.com/wagoid/estudio-up/commit/d41ccc419a0a0841bc856e30b7df164d6d9946ed))
+
 ## [1.7.2](https://github.com/wagoid/estudio-up/compare/v1.7.1...v1.7.2) (2024-08-26)
 
 
