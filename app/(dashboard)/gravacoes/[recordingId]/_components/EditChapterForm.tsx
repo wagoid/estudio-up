@@ -4,7 +4,10 @@ import { useForm } from 'react-hook-form'
 import { FormTextField } from '@/components/ui/FormTextField'
 import { FC, useEffect, useRef } from 'react'
 import { AudioPlayer } from '@/components/ui/AudioPlayer'
-import { upsertChapterAction } from '@/lib/modules/recordings/recordings.actions'
+import {
+  createChapterAction,
+  generateChapterAudioAction,
+} from '@/lib/modules/recordings/recordings.actions'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
@@ -28,7 +31,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export type EditingChapter = {
-  isDraft?: boolean
+  id?: string
   type: ChapterType
   title?: DraftAudio
   content: DraftAudio
@@ -77,13 +80,20 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
   const chapterType = watch('type')
 
   const onSubmit = handleSubmit(async (formData) => {
-    await upsertChapterAction(recording.id, {
-      titleId: chapter.title?.fileId,
-      contentId: chapter.content.fileId,
-      type: formData.type as ChapterType,
-      titleText: formData.title,
-      contentText: formData.content,
-    })
+    if (chapter.id) {
+      await generateChapterAudioAction(recording.id, {
+        id: chapter.id,
+        type: formData.type as ChapterType,
+        titleText: formData.title,
+        contentText: formData.content,
+      })
+    } else {
+      await createChapterAction(recording.id, {
+        type: formData.type as ChapterType,
+        titleText: formData.title,
+        contentText: formData.content,
+      })
+    }
     router.refresh()
   })
 
@@ -134,7 +144,7 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           options={chapterTypeOptions}
         />
         <FormTextField name="title" label="Título" control={control} />
-        {!chapter.isDraft && chapter.title && (
+        {chapter.title && (
           <AudioPlayer audio={chapter.title} objectStoreUrl={objectStoreUrl} />
         )}
         <FormTextField
@@ -146,13 +156,10 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           control={control}
           required
         />
-        {!chapter.isDraft && (
-          <AudioPlayer
-            audio={chapter.content}
-            objectStoreUrl={objectStoreUrl}
-          />
-        )}
-        <FormSubmitButton control={control}>Gerar áudio</FormSubmitButton>
+        <AudioPlayer audio={chapter.content} objectStoreUrl={objectStoreUrl} />
+        <FormSubmitButton control={control} disableDirtyCheck>
+          {chapter.id ? 'Gerar áudio' : 'Criar capítulo'}
+        </FormSubmitButton>
       </Stack>
     </Box>
   )

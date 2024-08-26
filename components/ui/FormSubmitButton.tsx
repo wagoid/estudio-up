@@ -3,15 +3,19 @@ import { Control, FieldValues, useFormState } from 'react-hook-form'
 
 export const FormSubmitButton = <TFieldValues extends FieldValues>({
   control,
+  disableDirtyCheck,
   ...otherProps
-}: Omit<ButtonProps, 'disabled'> & { control: Control<TFieldValues> }) => {
+}: Omit<ButtonProps, 'disabled'> & {
+  control: Control<TFieldValues>
+  disableDirtyCheck?: boolean
+}) => {
   const { isDirty, isSubmitting, isValid } = useFormState({ control })
 
   return (
     <Button
       variant="contained"
       type="submit"
-      disabled={!isDirty || isSubmitting || !isValid}
+      disabled={(!disableDirtyCheck && !isDirty) || isSubmitting || !isValid}
       {...otherProps}
     />
   )

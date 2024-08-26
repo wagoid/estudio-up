@@ -2,8 +2,10 @@ import { getDataSource, PaginationParams, PaginationResponse } from '@/lib/db'
 import { Recording, RecordingData } from './Recording.entity'
 import { audiosFolder } from './recordings.constants'
 
+export const buildAudioFilename = (fileId: string) => `${fileId}.mp3`
+
 export const buildAudioFilePath = (fileId: string) =>
-  `${audiosFolder}/${fileId}.mp3`
+  `${audiosFolder}/${buildAudioFilename(fileId)}`
 
 const getRepository = async () => {
   const dataSource = await getDataSource()

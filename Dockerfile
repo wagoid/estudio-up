@@ -1,9 +1,7 @@
-FROM --platform=linux/arm64 node:20.11.1-alpine3.19 AS base
+FROM node:20.11.1-bookworm-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -27,6 +25,11 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get install -y mp3wrap && \
+    apt-get clean -y
+
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
@@ -42,7 +45,10 @@ ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN apk add --no-cache tini
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get install -y tini && \
+    apt-get clean -y
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

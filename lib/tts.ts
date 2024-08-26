@@ -5,6 +5,8 @@ import {
   SpeechSynthesisOutputFormat,
   SpeechSynthesizer,
 } from 'microsoft-cognitiveservices-speech-sdk'
+import pRetry from 'p-retry'
+import { RETRY_OPTIONS } from './constants'
 
 export const textToSpeech = async (
   fileId: string,
@@ -26,27 +28,36 @@ export const textToSpeech = async (
 
   console.log(`generating tts ${fileId}`)
 
-  return new Promise<ReadStream>((resolve, reject) => {
-    synthesizer.speakTextAsync(
-      text,
-      () => {
-        console.log(`tts finished ${fileId}`)
-        synthesizer.close(
+  const result = pRetry(
+    () =>
+      new Promise<ReadStream>((resolve, reject) => {
+        synthesizer.speakTextAsync(
+          text,
           () => {
-            const audioFile = createReadStream(filename)
-            resolve(audioFile)
+            console.log(`tts finished ${fileId}`)
+            synthesizer.close(
+              () => {
+                const audioFile = createReadStream(filename)
+                resolve(audioFile)
+              },
+              (error) => {
+                console.error(
+                  `tts error when closing synthesizer ${fileId}`,
+                  error,
+                )
+                reject(error)
+              },
+            )
           },
           (error) => {
-            console.error(`tts error when closing synthesizer ${fileId}`, error)
-            reject(error)
+            console.error(`tts error ${fileId}`, error)
+            const runReject = () => () => reject(error)
+            synthesizer.close(runReject, runReject)
           },
         )
-      },
-      (error) => {
-        console.error(`tts error ${fileId}`, error)
-        const runReject = () => () => reject(error)
-        synthesizer.close(runReject, runReject)
-      },
-    )
-  })
+      }),
+    RETRY_OPTIONS,
+  )
+
+  return result
 }

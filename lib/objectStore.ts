@@ -6,6 +6,12 @@ import {
   PutObjectCommandInput,
 } from '@aws-sdk/client-s3'
 import { StreamingBlobPayloadInputTypes } from '@smithy/types'
+import { writeFile } from 'fs/promises'
+import { tmpdir } from 'os'
+import pRetry from 'p-retry'
+import { basename, resolve } from 'path'
+import { Stream } from 'stream'
+import { RETRY_OPTIONS } from './constants'
 
 const bucket = process.env.AWS_BUCKET_NAME
 
@@ -30,7 +36,7 @@ export const uploadFile = async (
     ...input,
   })
 
-  const response = await client.send(command)
+  const response = await pRetry(() => client.send(command), RETRY_OPTIONS)
 
   console.log(`uploaded file: ${key}`)
 
@@ -45,7 +51,7 @@ export const deleteFile = async (key: string) => {
     Key: key,
   })
 
-  const response = await client.send(command)
+  const response = await pRetry(() => client.send(command), RETRY_OPTIONS)
 
   console.log(`deleted file: ${key}`)
 
@@ -58,5 +64,19 @@ export const getFile = async (key: string) => {
     Key: key,
   })
 
-  return client.send(command)
+  const result = await pRetry(() => client.send(command), RETRY_OPTIONS)
+
+  return result
+}
+
+export const downloadFile = async (key: string) => {
+  console.log(`downloading file: ${key}`)
+
+  const file = await getFile(key)
+  const filename = basename(key)
+  const outputFilename = resolve(tmpdir(), filename)
+
+  await writeFile(outputFilename, file.Body as Stream)
+
+  return outputFilename
 }

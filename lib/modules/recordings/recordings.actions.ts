@@ -2,7 +2,7 @@
 
 import { PaginationParams, PaginationResponse } from '@/lib/db'
 import { generateId } from '@/lib/id'
-import { deleteFile, uploadFile } from '@/lib/objectStore'
+import { deleteFile, downloadFile, uploadFile } from '@/lib/objectStore'
 import { textToSpeech } from '@/lib/tts'
 import {
   buildAudioFilePath,
@@ -13,16 +13,21 @@ import {
   getRecordings,
   GetRecordingsParams,
   normalizeTextForTTS,
+  buildAudioFilename,
 } from '@/lib/modules/recordings/recordings.utils'
 import { redirect } from 'next/navigation'
+import { execa } from 'execa'
+import { clone } from 'rambda'
 import {
-  Audio,
   Chapter,
   ChapterType,
+  RecordingData,
   RecordingObj,
-  Voice,
 } from './Recording.entity'
 import { audioUploadInput, azureVoices } from './recordings.constants'
+import { resolve } from 'path'
+import { tmpdir } from 'os'
+import { createReadStream } from 'fs'
 
 export const createInitialRecordingAction = async (titleParam: string) => {
   const title = normalizeTextForTTS(titleParam)
@@ -40,14 +45,6 @@ export const createInitialRecordingAction = async (titleParam: string) => {
   })
 
   return redirect(`/gravacoes/${recording.id}/editar`)
-}
-
-export type UpsertChapterData = {
-  titleId?: string
-  type: ChapterType
-  titleText?: string
-  contentId: string
-  contentText: string
 }
 
 export const getRecordingAction = async (
@@ -72,116 +69,135 @@ export const getRecordingsAction = async (
   }
 }
 
-const buildTitleAudio = async (
-  voice: Voice,
-  inputTitleId?: string,
-  titleId?: string,
-  titleText?: string,
-  existingChapter?: Chapter,
-): Promise<Audio | undefined> => {
-  const hasChanged = !existingChapter || inputTitleId !== titleId
+export type CreateChapterData = {
+  type: ChapterType
+  titleText?: string
+  contentText: string
+}
 
-  if (titleId && titleText && hasChanged) {
-    const titleAudio = await textToSpeech(titleId, titleText, voice.code)
-    await uploadFile(buildAudioFilePath(titleId), titleAudio, audioUploadInput)
+export const createChapterAction = async (
+  recordingId: number,
+  formData: CreateChapterData,
+) => {
+  const {
+    type,
+    titleText: titleTextParam,
+    contentText: contentTextParam,
+  } = formData
+  const titleText = titleTextParam && normalizeTextForTTS(titleTextParam)
+  const contentText = contentTextParam && normalizeTextForTTS(contentTextParam)
+  const voice =
+    type === 'content' ? azureVoices.main : azureVoices.imageDescription
 
-    return {
+  const recording = await getRecording(recordingId)
+
+  const contentId = generateId()
+  const contentAudio = await textToSpeech(contentId, contentText, voice.code)
+  await uploadFile(
+    buildAudioFilePath(contentId),
+    contentAudio,
+    audioUploadInput,
+  )
+
+  const chapterToInsert: Chapter = {
+    id: generateId(),
+    type,
+    content: {
+      fileId: contentId,
+      text: contentText,
+      voice,
+    },
+  }
+
+  if (titleText) {
+    const titleId = generateId()
+    const contentAudio = await textToSpeech(titleId, titleText, voice.code)
+    await uploadFile(
+      buildAudioFilePath(titleId),
+      contentAudio,
+      audioUploadInput,
+    )
+
+    chapterToInsert.title = {
       fileId: titleId,
       text: titleText,
       voice,
     }
   }
 
-  return existingChapter?.title
+  recording.data = {
+    ...recording.data,
+    chapters: [...recording.data.chapters, chapterToInsert],
+  }
+
+  await saveRecording(recording)
 }
 
-const buildContentAudio = async (
-  voice: Voice,
-  inputContentId: string,
-  contentId: string,
-  contentText: string,
-  existingChapter?: Chapter,
-): Promise<Audio> => {
-  let content: Audio
+export type GenerateChapterAudioData = {
+  type: ChapterType
+  id: string
+  titleText?: string
+  contentText: string
+}
 
-  if (inputContentId !== contentId || !existingChapter) {
-    const titleAudio = await textToSpeech(contentId, contentText, voice.code)
-    await uploadFile(
-      buildAudioFilePath(contentId),
-      titleAudio,
-      audioUploadInput,
-    )
+export const generateChapterAudioAction = async (
+  recordingId: number,
+  { type, id, titleText, contentText }: GenerateChapterAudioData,
+) => {
+  console.log(`generating chapter audio ${id} for recording ${recordingId}`)
 
-    content = {
+  const recording = await getRecording(recordingId)
+  const voice =
+    type === 'content' ? azureVoices.main : azureVoices.imageDescription
+  const existingChapter = recording.data.chapters.find(
+    (chapter) => chapter.id === id,
+  )
+
+  if (!existingChapter) {
+    throw new Error(`Chapter was not found: ${id}`)
+  }
+
+  const contentId = generateId()
+  const contentAudio = await textToSpeech(contentId, contentText, voice.code)
+  await uploadFile(
+    buildAudioFilePath(contentId),
+    contentAudio,
+    audioUploadInput,
+  )
+
+  const chapterToUpdate: Chapter = {
+    id: existingChapter.id,
+    type,
+    content: {
       fileId: contentId,
       text: contentText,
       voice,
+    },
+  }
+
+  if (titleText) {
+    const titleId = generateId()
+    const contentAudio = await textToSpeech(titleId, titleText, voice.code)
+    await uploadFile(
+      buildAudioFilePath(titleId),
+      contentAudio,
+      audioUploadInput,
+    )
+
+    chapterToUpdate.title = {
+      fileId: titleId,
+      text: titleText,
+      voice,
     }
-  } else {
-    content = existingChapter.content
   }
 
-  return content
-}
+  const updatedChapters = recording.data.chapters.map((chapter) => {
+    if (chapter.id === existingChapter.id) {
+      return chapterToUpdate
+    }
 
-export const upsertChapterAction = async (
-  id: number,
-  formData: UpsertChapterData,
-) => {
-  const {
-    type,
-    titleId: inputTitleId,
-    titleText: titleTextParam,
-    contentId: inputContentId,
-    contentText: contentTextParam,
-  } = formData
-  const titleText = titleTextParam && normalizeTextForTTS(titleTextParam)
-  const contentText = contentTextParam && normalizeTextForTTS(contentTextParam)
-
-  const voice =
-    type === 'content' ? azureVoices.main : azureVoices.imageDescription
-
-  const recording = await getRecording(id)
-  const currentChapterPredicate = (chapter: Chapter) =>
-    chapter.content.fileId === inputContentId
-  const existingChapter = recording.data.chapters.find(currentChapterPredicate)
-
-  const titleId =
-    inputTitleId && existingChapter?.title?.text !== titleText
-      ? generateId()
-      : inputTitleId
-  const contentId =
-    existingChapter?.content.text !== contentText
-      ? generateId()
-      : inputContentId
-
-  const chapterToUpsert: Chapter = {
-    type,
-    content: await buildContentAudio(
-      voice,
-      inputContentId,
-      contentId,
-      contentText,
-      existingChapter,
-    ),
-    title: await buildTitleAudio(
-      voice,
-      inputTitleId,
-      titleId,
-      titleText,
-      existingChapter,
-    ),
-  }
-
-  const updatedChapters = existingChapter
-    ? recording.data.chapters.map((chapter) => {
-        if (currentChapterPredicate(chapter)) {
-          return chapterToUpsert
-        }
-
-        return chapter
-      })
-    : [...recording.data.chapters, chapterToUpsert]
+    return chapter
+  })
 
   recording.data = {
     ...recording.data,
@@ -190,30 +206,33 @@ export const upsertChapterAction = async (
 
   await saveRecording(recording)
 
-  if (existingChapter) {
-    if (inputTitleId && inputTitleId !== titleId) {
-      await deleteFile(buildAudioFilePath(inputTitleId))
-    }
-    if (inputContentId !== contentId) {
-      await deleteFile(buildAudioFilePath(inputContentId))
-    }
+  if (existingChapter.title?.fileId) {
+    await deleteFile(buildAudioFilePath(existingChapter.title.fileId))
+  }
+  if (existingChapter.content.fileId) {
+    await deleteFile(buildAudioFilePath(existingChapter.content.fileId))
   }
 }
 
-export const deleteChapterAction = async (
-  id: number,
-  contentFileId: string,
-  titleFileId?: string,
-) => {
-  const recording = await getRecording(id)
+export const deleteChapterAction = async (recordingId: number, id: string) => {
+  console.log(`deleting chapter ${id} of recording ${recordingId}`)
 
-  if (titleFileId) {
-    await deleteFile(buildAudioFilePath(titleFileId))
+  const recording = await getRecording(recordingId)
+  const chapter = recording.data.chapters.find((chapter) => chapter.id === id)
+
+  if (!chapter) {
+    throw new Error(`Chapter was not found: ${id}`)
   }
-  await deleteFile(buildAudioFilePath(contentFileId))
+
+  if (chapter.title?.fileId) {
+    await deleteFile(buildAudioFilePath(chapter.title.fileId))
+  }
+  if (chapter.content.fileId) {
+    await deleteFile(buildAudioFilePath(chapter.content.fileId))
+  }
 
   recording.data.chapters = recording.data.chapters.filter(
-    (chapter) => chapter.content.fileId !== contentFileId,
+    (chapter) => chapter.id !== id,
   )
 
   await saveRecording(recording)
@@ -221,13 +240,13 @@ export const deleteChapterAction = async (
 
 export const updateRecordingTitleAction = async (
   id: number,
-  titleId: string,
   titleTextParam: string,
 ) => {
   const titleText = normalizeTextForTTS(titleTextParam)
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, titleText, azureVoices.main.code)
   const recording = await getRecording(id)
+  const currentTitleFileId = recording.data.title.fileId
 
   await uploadFile(buildAudioFilePath(fileId), audioFile, audioUploadInput)
 
@@ -239,7 +258,9 @@ export const updateRecordingTitleAction = async (
 
   await saveRecording(recording)
 
-  await deleteFile(buildAudioFilePath(titleId))
+  if (currentTitleFileId) {
+    await deleteFile(buildAudioFilePath(currentTitleFileId))
+  }
 }
 
 export const deleteRecordingAction = async (id: number) => {
@@ -249,12 +270,16 @@ export const deleteRecordingAction = async (id: number) => {
 
   await deleteRecording(id)
 
-  await deleteFile(buildAudioFilePath(title.fileId))
+  if (title.fileId) {
+    await deleteFile(buildAudioFilePath(title.fileId))
+  }
 
   for (const chapter of chapters) {
-    await deleteFile(buildAudioFilePath(chapter.content.fileId))
+    if (chapter.content.fileId) {
+      await deleteFile(buildAudioFilePath(chapter.content.fileId))
+    }
 
-    if (chapter.title) {
+    if (chapter.title?.fileId) {
       await deleteFile(buildAudioFilePath(chapter.title.fileId))
     }
   }
@@ -281,6 +306,73 @@ export const uploadMergedAudioAction = async (
   }
 
   recording.data.fileId = fileId
+
+  await saveRecording(recording)
+}
+
+export const generateMergedAudioAction = async (recordingId: number) => {
+  const fileId = generateId()
+  const filePath = resolve(tmpdir(), buildAudioFilename(fileId))
+  const mp3wrapGeneratedFilePath = filePath.replace(fileId, `${fileId}_MP3WRAP`)
+
+  console.log(`generating merged audio: ${recordingId}`)
+
+  const recording = await getRecording(recordingId)
+  const previousFileId = recording.data.fileId
+
+  const titleAudios = recording.data.title.fileId
+    ? [downloadFile(buildAudioFilePath(recording.data.title.fileId))]
+    : []
+
+  const chapterAudios = await Promise.all(
+    titleAudios.concat(
+      recording.data.chapters.flatMap((chapter) =>
+        (chapter.title?.fileId
+          ? [downloadFile(buildAudioFilePath(chapter.title.fileId))]
+          : []
+        ).concat(
+          chapter.content.fileId
+            ? [downloadFile(buildAudioFilePath(chapter.content.fileId))]
+            : [],
+        ),
+      ),
+    ),
+  )
+
+  await execa`mp3wrap ${filePath} ${chapterAudios}`
+
+  await uploadFile(
+    buildAudioFilePath(fileId),
+    createReadStream(mp3wrapGeneratedFilePath),
+    audioUploadInput,
+  )
+
+  if (previousFileId) {
+    await deleteFile(buildAudioFilePath(previousFileId))
+  }
+
+  const updatedData: RecordingData = clone(recording.data)
+
+  updatedData.fileId = fileId
+
+  if (updatedData.title.fileId) {
+    await deleteFile(buildAudioFilePath(updatedData.title.fileId))
+    delete updatedData.title.fileId
+  }
+
+  for (const chapter of updatedData.chapters) {
+    if (chapter.title?.fileId) {
+      await deleteFile(buildAudioFilePath(chapter.title.fileId))
+      delete chapter.title.fileId
+    }
+
+    if (chapter.content.fileId) {
+      await deleteFile(buildAudioFilePath(chapter.content.fileId))
+      delete chapter.content.fileId
+    }
+  }
+
+  recording.data = updatedData
 
   await saveRecording(recording)
 }

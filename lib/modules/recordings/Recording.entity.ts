@@ -17,12 +17,13 @@ export interface Voice {
 }
 
 export interface Audio {
-  fileId: string
+  fileId?: string
   text: string
   voice: Voice
 }
 
 export interface Chapter {
+  id: string
   type: ChapterType
   title?: Audio
   content: Audio

@@ -44,7 +44,7 @@ export default async function ViewRecording({
           Capítulos
         </Typography>
         {recording.data.chapters.map((chapter) => (
-          <Card variant="outlined" key={chapter.content.fileId}>
+          <Card variant="outlined" key={chapter.id}>
             {chapter.title && (
               <CardHeader
                 variant="body2"

@@ -20,8 +20,12 @@ Instale [Docker](https://www.docker.com), e execute o seguinte para rodar o banc
 docker compose up
 ```
 
+Instale [mp3wrap](https://mp3wrap.sourceforge.net/), que é utilizada para concatenar arquivos mp3 e gerar o áudio final.
+Caso esteja usando uma distro linux que é baseada em debian (como Ubuntu), pode instalar diretamente via `apt`: `sudo apt install mp3wrap`
+
 Instale as dependências:
-```
+
+```sh
 npm install
 ```
 

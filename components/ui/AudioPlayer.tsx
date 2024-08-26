@@ -12,12 +12,13 @@ export const AudioPlayer: FC<AudioPlayerProps> = ({
   audio,
   style,
   objectStoreUrl,
-}) => (
-  <audio
-    controls
-    style={{ display: 'inline-block', ...style }}
-    key={audio.fileId}
-  >
-    <source src={buildAudioUrl(audio, objectStoreUrl)} type="audio/mpeg" />
-  </audio>
-)
+}) =>
+  audio.fileId ? (
+    <audio
+      controls
+      style={{ display: 'inline-block', ...style }}
+      key={audio.fileId}
+    >
+      <source src={buildAudioUrl(audio, objectStoreUrl)} type="audio/mpeg" />
+    </audio>
+  ) : null

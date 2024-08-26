@@ -1,16 +1,18 @@
 'use client'
 
 import {
+  Alert,
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
-  Link,
   Stack,
+  Tooltip,
+  Typography,
 } from '@mui/material'
+import InfoIcon from '@mui/icons-material/Info'
 import { FC, useEffect, useState } from 'react'
-import { generateId } from '@/lib/id'
 import { EditingChapter, EditChapterForm } from './EditChapterForm'
 import { deleteChapterAction } from '@/lib/modules/recordings/recordings.actions'
 import { useRouter } from 'next/navigation'
@@ -32,19 +34,23 @@ export const PageContent: FC<PageContentProps> = ({
   const [editingChapters, setEditingChapters] =
     useState<EditingChapter[]>(chapters)
   const router = useRouter()
+  const hasDraftChapter = editingChapters.some((chapter) => !chapter.id)
+  const hasMissingAudio =
+    !recording.data.title.fileId ||
+    editingChapters.some(
+      (chapter) => !chapter.title?.fileId && !chapter.content.fileId,
+    )
 
   useEffect(() => {
     setEditingChapters(chapters)
   }, [chapters])
 
   const onRemoveChapter = async (chapter: EditingChapter) => {
-    if (chapter.isDraft) {
-      setEditingChapters((prev) =>
-        prev.filter(({ content }) => content.fileId !== chapter.content.fileId),
-      )
-    } else {
-      await deleteChapterAction(recording.id, chapter.content.fileId)
+    if (chapter.id) {
+      await deleteChapterAction(recording.id, chapter.id)
       router.refresh()
+    } else {
+      setEditingChapters((prev) => prev.filter(({ id }) => !!id))
     }
   }
 
@@ -62,9 +68,9 @@ export const PageContent: FC<PageContentProps> = ({
       <Card>
         <CardHeader title="Editar capítulos" />
         <CardContent component={Stack}>
-          {editingChapters.map((draftChapter) => (
+          {editingChapters.map((draftChapter, index) => (
             <EditChapterForm
-              key={draftChapter.content.fileId}
+              key={draftChapter.title?.fileId ?? index}
               chapter={draftChapter}
               recording={recording}
               onRemove={onRemoveChapter}
@@ -79,14 +85,11 @@ export const PageContent: FC<PageContentProps> = ({
               setEditingChapters((prev) => [
                 ...prev,
                 {
-                  isDraft: true,
                   type: 'content',
                   title: {
-                    fileId: generateId(),
                     text: '',
                   },
                   content: {
-                    fileId: generateId(),
                     text: '',
                   },
                 },
@@ -97,9 +100,14 @@ export const PageContent: FC<PageContentProps> = ({
           </Button>
         </CardActions>
       </Card>
+      <Alert color="info" icon={<InfoIcon />} sx={{ alignItems: 'center' }}>
+        {hasMissingAudio
+          ? 'Gere os áudios do título e dos capítulos para gerar o áudio final'
+          : 'Os áudios do título e capítulos serão removidos ao gerar o áudio final'}
+      </Alert>
       <GenerateMergedAudioButton
         recording={recording}
-        disabled={editingChapters.some((chapter) => chapter.isDraft)}
+        disabled={hasDraftChapter || hasMissingAudio}
         sx={{ alignSelf: 'flex-start' }}
         objectStoreUrl={objectStoreUrl}
       />

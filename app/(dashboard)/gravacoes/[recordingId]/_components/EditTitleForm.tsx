@@ -42,7 +42,7 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({
   const router = useRouter()
 
   const onSubmit = handleSubmit(async (formData) => {
-    await updateRecordingTitleAction(id, title.fileId, formData.title)
+    await updateRecordingTitleAction(id, formData.title)
     router.refresh()
   })
 
@@ -51,7 +51,9 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({
       <Stack alignItems="flex-start">
         <FormTextField name="title" label="Título" control={control} required />
         <AudioPlayer audio={title} objectStoreUrl={objectStoreUrl} />
-        <FormSubmitButton control={control}>Gerar áudio</FormSubmitButton>
+        <FormSubmitButton control={control} disableDirtyCheck>
+          Gerar áudio
+        </FormSubmitButton>
       </Stack>
     </Box>
   )
