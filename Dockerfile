@@ -50,18 +50,13 @@ RUN apt-get -y update && \
     apt-get install -y tini && \
     apt-get clean -y
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
 COPY --from=builder /app/public ./public
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+COPY --from=builder /app ./
 
-COPY --from=builder --chown=nextjs:nodejs /app ./
-
-USER nextjs
+RUN chown -R node:node /app
+RUN chmod 755 /app
+USER node
 
 EXPOSE 3000
 
