@@ -1,7 +1,14 @@
 import Image from 'next/image'
 import { User } from 'next-auth'
 import { FC } from 'react'
-import { Box, Button, Divider, Popover, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Popover,
+  Typography,
+} from '@mui/material'
 import {
   bindPopover,
   bindTrigger,
@@ -14,7 +21,6 @@ export const UserDropdown: FC<{ user?: User }> = ({ user }) => {
     variant: 'popover',
     popupId: 'user-dropdown',
   })
-  const userInitials = user?.name?.split(' ').join('+')
 
   return (
     <>
@@ -24,20 +30,22 @@ export const UserDropdown: FC<{ user?: User }> = ({ user }) => {
         sx={{ padding: 0, minWidth: 0 }}
         {...bindTrigger(popupState)}
       >
-        <Image
-          src={
-            user?.image ?? `https://ui-avatars.com/api/?name=${userInitials}`
-          }
-          unoptimized
-          width={36}
-          height={36}
-          alt="Imagem do usuário"
-          style={{
-            borderRadius: '50%',
-            overflow: 'hidden',
-            objectFit: 'cover',
-          }}
-        />
+        <Avatar sx={{ width: 36, height: 36 }}>
+          {user?.image ? (
+            <Image
+              src={user.image}
+              unoptimized
+              width={36}
+              height={36}
+              alt="Imagem do usuário"
+              style={{
+                objectFit: 'cover',
+              }}
+            />
+          ) : (
+            (user?.name?.charAt(0).toUpperCase() ?? '')
+          )}
+        </Avatar>
       </Button>
       <Popover
         {...bindPopover(popupState)}
