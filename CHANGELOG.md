@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/wagoid/estudio-up/compare/v1.9.0...v1.10.0) (2024-08-28)
+
+
+### Features
+
+* utiliza o componente Avatar do MUI para o ícone do usuário ([81d8e6f](https://github.com/wagoid/estudio-up/commit/81d8e6f6bbcdcabc2cae7e5e26d5d41ade963e7a))
+
 ## [1.9.0](https://github.com/wagoid/estudio-up/compare/v1.8.0...v1.9.0) (2024-08-26)
 
 
