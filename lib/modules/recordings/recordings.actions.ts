@@ -12,7 +12,6 @@ import {
   saveRecording,
   getRecordings,
   GetRecordingsParams,
-  normalizeTextForTTS,
   buildAudioFilename,
 } from '@/lib/modules/recordings/recordings.utils'
 import { redirect } from 'next/navigation'
@@ -29,8 +28,7 @@ import { resolve } from 'path'
 import { tmpdir } from 'os'
 import { createReadStream } from 'fs'
 
-export const createInitialRecordingAction = async (titleParam: string) => {
-  const title = normalizeTextForTTS(titleParam)
+export const createInitialRecordingAction = async (title: string) => {
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, title, azureVoices.main.code)
 
@@ -79,13 +77,7 @@ export const createChapterAction = async (
   recordingId: number,
   formData: CreateChapterData,
 ) => {
-  const {
-    type,
-    titleText: titleTextParam,
-    contentText: contentTextParam,
-  } = formData
-  const titleText = titleTextParam && normalizeTextForTTS(titleTextParam)
-  const contentText = contentTextParam && normalizeTextForTTS(contentTextParam)
+  const { type, titleText, contentText } = formData
   const voice =
     type === 'content' ? azureVoices.main : azureVoices.imageDescription
 
@@ -142,17 +134,10 @@ export type GenerateChapterAudioData = {
 
 export const generateChapterAudioAction = async (
   recordingId: number,
-  {
-    type,
-    id,
-    titleText: titleTextParam,
-    contentText: contentTextParam,
-  }: GenerateChapterAudioData,
+  { type, id, titleText, contentText }: GenerateChapterAudioData,
 ) => {
   console.log(`generating chapter audio ${id} for recording ${recordingId}`)
 
-  const titleText = titleTextParam && normalizeTextForTTS(titleTextParam)
-  const contentText = contentTextParam && normalizeTextForTTS(contentTextParam)
   const recording = await getRecording(recordingId)
   const voice =
     type === 'content' ? azureVoices.main : azureVoices.imageDescription
@@ -247,9 +232,8 @@ export const deleteChapterAction = async (recordingId: number, id: string) => {
 
 export const updateRecordingTitleAction = async (
   id: number,
-  titleTextParam: string,
+  titleText: string,
 ) => {
-  const titleText = normalizeTextForTTS(titleTextParam)
   const fileId = generateId()
   const audioFile = await textToSpeech(fileId, titleText, azureVoices.main.code)
   const recording = await getRecording(id)

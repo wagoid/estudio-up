@@ -93,9 +93,40 @@ export const deleteRecording = async (id: number) => {
 
 const up = 'upê'
 
+const acronymLetterToWord: Record<string, string> = {
+  A: 'á',
+  B: 'bê',
+  C: 'cê',
+  D: 'dê',
+  E: 'é',
+  F: 'éfe',
+  G: 'gê',
+  H: 'agá',
+  I: 'í',
+  J: 'jóta',
+  K: 'cá',
+  L: 'éle',
+  M: 'ême',
+  N: 'êne',
+  O: 'ó',
+  P: 'pê',
+  Q: 'quê',
+  R: 'érre',
+  S: 'ésse',
+  T: 'tê',
+  U: 'ú',
+  V: 'vê',
+  W: 'dábliu',
+  X: 'xís',
+  Y: 'ípisilon',
+  Z: 'zê',
+}
+
 export const normalizeTextForTTS = (text: string) => {
-  return text
-    .replaceAll(' UP ', ` ${up} `)
-    .replaceAll(' UP.', `${up}.`)
-    .replaceAll(' UP,', ` ${up},`)
+  return text.replaceAll(/(^| )(?:[A-Z]){2,}/gm, (acronym) =>
+    acronym
+      .split('')
+      .map((char) => acronymLetterToWord[char] ?? char)
+      .join(''),
+  )
 }

@@ -7,12 +7,14 @@ import {
 } from 'microsoft-cognitiveservices-speech-sdk'
 import pRetry from 'p-retry'
 import { RETRY_OPTIONS } from './constants'
+import { normalizeTextForTTS } from './modules/recordings/recordings.utils'
 
 export const textToSpeech = async (
   fileId: string,
-  text: string,
+  textParam: string,
   voiceName: string,
 ) => {
+  const text = normalizeTextForTTS(textParam)
   const speechConfig = SpeechConfig.fromSubscription(
     process.env.AZURE_TTS_API_KEY as string,
     process.env.AZURE_TTS_REGION as string,
