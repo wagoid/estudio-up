@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/wagoid/estudio-up/compare/v1.10.0...v1.11.0) (2024-08-30)
+
+
+### Features
+
+* melhora a lógica de melhoria de siglas ([f471ceb](https://github.com/wagoid/estudio-up/commit/f471ceb2b3d3f5af3b44bed501381af1f5342eab))
+
 ## [1.10.0](https://github.com/wagoid/estudio-up/compare/v1.9.0...v1.10.0) (2024-08-28)
 
 
