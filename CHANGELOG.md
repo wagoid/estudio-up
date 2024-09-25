@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.4](https://github.com/wagoid/estudio-up/compare/v1.13.3...v1.13.4) (2024-09-25)
+
+
+### Bug Fixes
+
+* nome do bucket incorreto ([5801440](https://github.com/wagoid/estudio-up/commit/5801440a3e79067ca879ec687837bb96e3af50d5))
+
 ## [1.13.3](https://github.com/wagoid/estudio-up/compare/v1.13.2...v1.13.3) (2024-09-25)
 
 
