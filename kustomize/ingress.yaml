@@ -4,18 +4,8 @@ metadata:
   name: estudio
   labels:
     app: estudio
-  annotations:
-    cert-manager.io/issuer: prod-issuer
-    cert-manager.io/issuer-kind: ClusterOriginIssuer
-    cert-manager.io/issuer-group: cert-manager.k8s.cloudflare.com
-    external-dns.alpha.kubernetes.io/hostname: estudio.uptec.top
-    nginx.ingress.kubernetes.io/proxy-body-size: '100m'
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - estudio.uptec.top
-      secretName: estudio-tls
+  ingressClassName: cloudflare-tunnel
   rules:
     - host: estudio.uptec.top
       http:
