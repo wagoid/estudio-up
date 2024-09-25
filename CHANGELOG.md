@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.1](https://github.com/wagoid/estudio-up/compare/v1.13.0...v1.13.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* adiciona Buildx de novo para o setup do cache ([9872f97](https://github.com/wagoid/estudio-up/commit/9872f97d8138466522b81b80e9c77579bc3a0e94))
+
 ## [1.13.0](https://github.com/wagoid/estudio-up/compare/v1.12.0...v1.13.0) (2024-09-25)
 
 
