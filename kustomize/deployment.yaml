@@ -28,9 +28,9 @@ spec:
             - name: POSTGRES_PORT
               value: '5432'
             - name: POSTGRES_DATABASE
-              value: estudio
+              value: upestudio
             - name: POSTGRES_USER
-              value: estudio
+              value: upestudio
       containers:
         - name: estudio
           image: ghcr.io/wagoid/estudio-up:v1.13.1 # {x-release-please-version}
@@ -54,9 +54,9 @@ spec:
             - name: POSTGRES_PORT
               value: '5432'
             - name: POSTGRES_DATABASE
-              value: estudio
+              value: upestudio
             - name: POSTGRES_USER
-              value: estudio
+              value: upestudio
             - name: AUTH_URL
               value: https://estudio.uptec.top
             - name: AUTHENTIK_URL
@@ -72,7 +72,7 @@ spec:
             - name: AWS_ACCESS_KEY_ID
               value: estudio
             - name: AWS_S3_ENDPOINT_URL
-              value: http://minio-lead.minio:9000
+              value: http://minio.minio:9000
             - name: AWS_S3_FORCE_PATH_STYLE
               value: 'true'
             - name: AWS_S3_PUBLIC_URL
