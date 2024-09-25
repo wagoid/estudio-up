@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.2](https://github.com/wagoid/estudio-up/compare/v1.13.1...v1.13.2) (2024-09-25)
+
+
+### Bug Fixes
+
+* variaveis de ambiente ([459f90e](https://github.com/wagoid/estudio-up/commit/459f90e60f299501987e84a9f46116831c54e900))
+
 ## [1.13.1](https://github.com/wagoid/estudio-up/compare/v1.13.0...v1.13.1) (2024-09-25)
 
 
