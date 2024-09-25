@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/wagoid/estudio-up/compare/v1.11.0...v1.12.0) (2024-09-25)
+
+
+### Features
+
+* atualização da kustomization para o novo setup ([cc5856c](https://github.com/wagoid/estudio-up/commit/cc5856ca06445ebd3ac16211b9cd33c9f48a5624))
+
 ## [1.11.0](https://github.com/wagoid/estudio-up/compare/v1.10.0...v1.11.0) (2024-08-30)
 
 
