@@ -66,11 +66,11 @@ spec:
             - name: AZURE_TTS_REGION
               value: brazilsouth
             - name: AWS_BUCKET_NAME
-              value: estudio
+              value: up-estudio
             - name: AWS_REGION
               value: local
             - name: AWS_ACCESS_KEY_ID
-              value: estudio
+              value: up-estudio
             - name: AWS_S3_ENDPOINT_URL
               value: http://minio.minio
             - name: AWS_S3_FORCE_PATH_STYLE
