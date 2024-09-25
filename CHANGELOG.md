@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/wagoid/estudio-up/compare/v1.12.0...v1.13.0) (2024-09-25)
+
+
+### Features
+
+* build em amd64 para o novo cluster ([127e71b](https://github.com/wagoid/estudio-up/commit/127e71bea4fbdd2629dfbcf9f9df7fb7ea489ddd))
+
 ## [1.12.0](https://github.com/wagoid/estudio-up/compare/v1.11.0...v1.12.0) (2024-09-25)
 
 
