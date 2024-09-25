@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.3](https://github.com/wagoid/estudio-up/compare/v1.13.2...v1.13.3) (2024-09-25)
+
+
+### Bug Fixes
+
+* porta 80 para o service do minio ([bd91a73](https://github.com/wagoid/estudio-up/commit/bd91a733ab104296558845bd20210ddbf2bb9866))
+
 ## [1.13.2](https://github.com/wagoid/estudio-up/compare/v1.13.1...v1.13.2) (2024-09-25)
 
 
