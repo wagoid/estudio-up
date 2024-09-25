@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.5](https://github.com/wagoid/estudio-up/compare/v1.13.4...v1.13.5) (2024-09-25)
+
+
+### Bug Fixes
+
+* nome do bucket nos URLs de audio ([a2a65d0](https://github.com/wagoid/estudio-up/commit/a2a65d07e47b7555966ebd4f0456ee71de0ba69c))
+
 ## [1.13.4](https://github.com/wagoid/estudio-up/compare/v1.13.3...v1.13.4) (2024-09-25)
 
 
