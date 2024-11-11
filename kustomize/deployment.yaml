@@ -72,4 +72,4 @@ spec:
             - name: AWS_S3_PUBLIC_URL
               value: https://storage.wagdev.top
             - name: TTS_URL
-              value: http://tts:7851
+              value: https://tts.uptec.top
