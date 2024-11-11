@@ -3,7 +3,7 @@
 import { PaginationParams, PaginationResponse } from '@/lib/db'
 import { generateId } from '@/lib/id'
 import { deleteFile, downloadFile, uploadFile } from '@/lib/objectStore'
-import { textToSpeech } from '@/lib/tts'
+import { textToSpeech } from '@/lib/modules/tts/tts.utils'
 import {
   buildAudioFilePath,
   createRecording,
@@ -22,22 +22,26 @@ import {
   ChapterType,
   RecordingData,
   RecordingObj,
+  Voice,
 } from './Recording.entity'
-import { audioUploadInput, azureVoices } from './recordings.constants'
+import { audioUploadInput, defaultVoices } from './recordings.constants'
 import { resolve } from 'path'
 import { tmpdir } from 'os'
 import { createReadStream } from 'fs'
 
-export const createInitialRecordingAction = async (title: string) => {
+export const createInitialRecordingAction = async (
+  title: string,
+  voiceCode: string,
+) => {
   const fileId = generateId()
-  const audioFile = await textToSpeech(fileId, title, azureVoices.main.code)
+  const audioFile = await textToSpeech(fileId, title, voiceCode)
 
   await uploadFile(buildAudioFilePath(fileId), audioFile, audioUploadInput)
   const recording = await createRecording({
     title: {
       text: title,
       fileId,
-      voice: azureVoices.main,
+      voice: defaultVoices.main,
     },
     chapters: [],
   })
@@ -71,6 +75,7 @@ export type CreateChapterData = {
   type: ChapterType
   titleText?: string
   contentText: string
+  voiceCode: string
 }
 
 export const createChapterAction = async (
@@ -78,8 +83,10 @@ export const createChapterAction = async (
   formData: CreateChapterData,
 ) => {
   const { type, titleText, contentText } = formData
-  const voice =
-    type === 'content' ? azureVoices.main : azureVoices.imageDescription
+  const voice: Voice = {
+    source: 'internal',
+    code: formData.voiceCode,
+  }
 
   const recording = await getRecording(recordingId)
 
@@ -130,17 +137,20 @@ export type GenerateChapterAudioData = {
   id: string
   titleText?: string
   contentText: string
+  voiceCode: string
 }
 
 export const generateChapterAudioAction = async (
   recordingId: number,
-  { type, id, titleText, contentText }: GenerateChapterAudioData,
+  { type, id, titleText, contentText, voiceCode }: GenerateChapterAudioData,
 ) => {
   console.log(`generating chapter audio ${id} for recording ${recordingId}`)
 
   const recording = await getRecording(recordingId)
-  const voice =
-    type === 'content' ? azureVoices.main : azureVoices.imageDescription
+  const voice: Voice = {
+    source: 'internal',
+    code: voiceCode,
+  }
   const existingChapter = recording.data.chapters.find(
     (chapter) => chapter.id === id,
   )
@@ -233,9 +243,10 @@ export const deleteChapterAction = async (recordingId: number, id: string) => {
 export const updateRecordingTitleAction = async (
   id: number,
   titleText: string,
+  voice: string,
 ) => {
   const fileId = generateId()
-  const audioFile = await textToSpeech(fileId, titleText, azureVoices.main.code)
+  const audioFile = await textToSpeech(fileId, titleText, voice)
   const recording = await getRecording(id)
   const currentTitleFileId = recording.data.title.fileId
 
@@ -244,7 +255,10 @@ export const updateRecordingTitleAction = async (
   recording.data.title = {
     text: titleText,
     fileId,
-    voice: azureVoices.main,
+    voice: {
+      source: 'internal',
+      code: voice,
+    },
   }
 
   await saveRecording(recording)

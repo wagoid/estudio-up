@@ -17,7 +17,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: 'postgres@example.com'
       PGADMIN_DEFAULT_PASSWORD: 'example'
     ports:
-      - '8080:80'
+      - '8081:80'
 
   minio:
     image: bitnami/minio:latest
@@ -30,6 +30,19 @@ services:
       - MINIO_ROOT_USER=test
       - MINIO_ROOT_PASSWORD=password
       - MINIO_DEFAULT_BUCKETS=up-estudio:public
+
+  tts:
+    image: ghcr.io/wagoid/alltalk_tts_up:v1.3.0
+    ports:
+      - '7851:7851'
+    # remova os comentário caso tenha GPU nvidia
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
 
 volumes:
   postgres_data:

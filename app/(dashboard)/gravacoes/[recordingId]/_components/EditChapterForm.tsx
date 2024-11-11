@@ -19,13 +19,16 @@ import {
   FormRadioGroup,
   RadioGroupOption,
 } from '@/components/ui/FormRadioGroup'
+import { defaultVoices } from '@/lib/modules/recordings/recordings.constants'
+import { FormSelect } from '@/components/ui/FormSelect'
 
-type DraftAudio = Omit<Audio, 'voice'>
+type DraftAudio = Audio
 
 const schema = z.object({
   type: requiredString(),
   title: z.string(),
   content: requiredString(),
+  voice: requiredString(),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -42,6 +45,7 @@ type EditChapterFormProps = {
   recording: RecordingObj
   onRemove: (chapter: EditingChapter) => Promise<void>
   objectStoreUrl: string
+  voices: string[]
 }
 
 const defaultImageDescriptionTitle = 'Descrição de imagem'
@@ -60,11 +64,21 @@ const chapterTypeOptions: RadioGroupOption[] = [
   },
 ]
 
+const getDefaultVoiceForType = (voices: string[], chapterType: ChapterType) => {
+  const defaultVoiceForType =
+    chapterType === 'image_description'
+      ? defaultVoices.imageDescription.code
+      : defaultVoices.main.code
+
+  return voices.find((voice) => voice === defaultVoiceForType)
+}
+
 export const EditChapterForm: FC<EditChapterFormProps> = ({
   chapter,
   recording,
   onRemove,
   objectStoreUrl,
+  voices,
 }) => {
   const { control, handleSubmit, watch, getValues, setValue } =
     useForm<FormValues>({
@@ -72,12 +86,17 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
         type: chapter.type,
         title: chapter.title?.text ?? '',
         content: chapter.content.text,
+        voice:
+          voices.find((voice) => voice === chapter.content.voice.code) ??
+          getDefaultVoiceForType(voices, chapter.type) ??
+          voices[0],
       },
       resolver: zodResolver(schema),
       mode: 'onBlur',
     })
   const router = useRouter()
   const chapterType = watch('type')
+  const voiceOptions = voices.map((voice) => ({ label: voice, value: voice }))
 
   const onSubmit = handleSubmit(async (formData) => {
     if (chapter.id) {
@@ -86,12 +105,14 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
         type: formData.type as ChapterType,
         titleText: formData.title,
         contentText: formData.content,
+        voiceCode: formData.voice,
       })
     } else {
       await createChapterAction(recording.id, {
         type: formData.type as ChapterType,
         titleText: formData.title,
         contentText: formData.content,
+        voiceCode: formData.voice,
       })
     }
     router.refresh()
@@ -100,6 +121,11 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
   useEffect(() => {
     const title = getValues('title')
 
+    setValue(
+      'voice',
+      getDefaultVoiceForType(voices, chapterType as ChapterType) ??
+        getValues('voice'),
+    )
     if (chapterType === imageDescriptionChapterType && !title) {
       setValue('title', defaultImageDescriptionTitle)
     } else if (
@@ -142,6 +168,12 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           name="type"
           label="Tipo do capítulo"
           options={chapterTypeOptions}
+        />
+        <FormSelect
+          name="voice"
+          label="Voz"
+          options={voiceOptions}
+          control={control}
         />
         <FormTextField name="title" label="Título" control={control} />
         {chapter.title && (

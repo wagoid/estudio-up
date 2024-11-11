@@ -91,8 +91,6 @@ export const deleteRecording = async (id: number) => {
   await repository.delete(id)
 }
 
-const up = 'upê'
-
 const acronymLetterToWord: Record<string, string> = {
   A: 'á',
   B: 'bê',
@@ -123,7 +121,7 @@ const acronymLetterToWord: Record<string, string> = {
 }
 
 export const normalizeTextForTTS = (text: string) => {
-  return text.replaceAll(/(^| )(?:[A-Z]){2,}/gm, (acronym) =>
+  return text.replaceAll(/(^| |\()(?:[A-Z]){2,}/gm, (acronym) =>
     acronym
       .split('')
       .map((char) => acronymLetterToWord[char] ?? char)

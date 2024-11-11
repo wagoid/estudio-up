@@ -42,7 +42,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get install -y tini mp3wrap && \
+    apt-get install -y tini mp3wrap ffmpeg && \
     apt-get clean -y
 
 COPY --from=builder /app/public ./public

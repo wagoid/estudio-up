@@ -61,10 +61,6 @@ spec:
               value: https://estudio.uptec.top
             - name: AUTHENTIK_URL
               value: https://acesso.uptec.top
-            - name: AZURE_TTS_ENDPOINT
-              value: https://brazilsouth.api.cognitive.microsoft.com/
-            - name: AZURE_TTS_REGION
-              value: brazilsouth
             - name: AWS_BUCKET_NAME
               value: up-estudio
             - name: AWS_REGION

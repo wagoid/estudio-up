@@ -12,6 +12,8 @@ import pRetry from 'p-retry'
 import { basename, resolve } from 'path'
 import { Stream } from 'stream'
 import { RETRY_OPTIONS } from './constants'
+import { createReadStream } from 'fs'
+import { execa } from 'execa'
 
 const bucket = process.env.AWS_BUCKET_NAME
 
@@ -24,7 +26,7 @@ const client = new S3Client({
 
 export const uploadFile = async (
   key: string,
-  body: StreamingBlobPayloadInputTypes,
+  object: StreamingBlobPayloadInputTypes,
   input?: Omit<PutObjectCommandInput, 'Bucket' | 'Key' | 'Body'>,
 ) => {
   console.log(`uploading file: ${key}`)
@@ -32,11 +34,15 @@ export const uploadFile = async (
   const command = new PutObjectCommand({
     Bucket: bucket,
     Key: key,
-    Body: body,
+    Body: typeof object === 'string' ? createReadStream(object) : object,
     ...input,
   })
 
   const response = await pRetry(() => client.send(command), RETRY_OPTIONS)
+
+  if (typeof object === 'string') {
+    await execa`rm -f ${object}`
+  }
 
   console.log(`uploaded file: ${key}`)
 

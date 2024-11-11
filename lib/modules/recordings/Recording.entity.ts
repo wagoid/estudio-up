@@ -6,8 +6,8 @@ import {
   CreateDateColumn,
 } from 'typeorm'
 
-// `internal` será usado para nossas vozes geradas internamente
-type VoiceSource = 'azure' | 'internal'
+// `internal` é usado para nossas vozes geradas por nossa própria ferramenta de TTS
+type VoiceSource = 'internal'
 
 export type ChapterType = 'content' | 'image_description'
 

@@ -20,15 +20,18 @@ import { GenerateMergedAudioButton } from './GenerateMergedAudioButton'
 import { EditTitleForm } from './EditTitleForm'
 import { RecordingObj } from '@/lib/modules/recordings/Recording.entity'
 import { RecordingFileInfo } from '../../_components/RecordingFileInfo'
+import { defaultVoices } from '@/lib/modules/recordings/recordings.constants'
 
 type PageContentProps = {
   recording: RecordingObj
   objectStoreUrl: string
+  voices: string[]
 }
 
 export const PageContent: FC<PageContentProps> = ({
   recording,
   objectStoreUrl,
+  voices,
 }) => {
   const { chapters } = recording.data
   const [editingChapters, setEditingChapters] =
@@ -63,6 +66,7 @@ export const PageContent: FC<PageContentProps> = ({
           <EditTitleForm
             recording={recording}
             objectStoreUrl={objectStoreUrl}
+            voices={voices}
           />
         </CardContent>
       </Card>
@@ -76,6 +80,7 @@ export const PageContent: FC<PageContentProps> = ({
               recording={recording}
               onRemove={onRemoveChapter}
               objectStoreUrl={objectStoreUrl}
+              voices={voices}
             />
           ))}
         </CardContent>
@@ -89,9 +94,11 @@ export const PageContent: FC<PageContentProps> = ({
                   type: 'content',
                   title: {
                     text: '',
+                    voice: defaultVoices.main,
                   },
                   content: {
                     text: '',
+                    voice: defaultVoices.main,
                   },
                 },
               ])

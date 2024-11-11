@@ -1,16 +1,16 @@
 import { Voice } from '@/lib/modules/recordings/Recording.entity'
 
 const mainVoice: Voice = {
-  source: 'azure',
-  code: 'pt-BR-ThalitaNeural',
+  source: 'internal',
+  code: 'Matilde',
 }
 
 const imageDescriptionVoice: Voice = {
-  source: 'azure',
-  code: 'pt-BR-AntonioNeural',
+  source: 'internal',
+  code: 'Diego',
 }
 
-export const azureVoices = {
+export const defaultVoices = {
   main: mainVoice,
   imageDescription: imageDescriptionVoice,
 }

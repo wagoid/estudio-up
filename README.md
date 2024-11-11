@@ -13,14 +13,19 @@ Este projeto usa as seguintes ferramentas:
 
 ## Rodando a aplicação localmente
 
+Obenha com outra pesssoa as variáveis de ambiente que estão vazias no `.env` e adicione ao arquivo `.env.local`.
+
+Instale a versão correta do Node.js (presente no `.nvmrc`) através de um gerenciador de versões, como o `volta`.
+
 Instale [Docker](https://www.docker.com), e execute o seguinte para rodar o banco de dados e object store (S3):
 
 ```sh
 docker compose up
 ```
 
-Instale [mp3wrap](https://mp3wrap.sourceforge.net/), que é utilizada para concatenar arquivos mp3 e gerar o áudio final.
-Caso esteja usando uma distro linux que é baseada em debian (como Ubuntu), pode instalar diretamente via `apt`: `sudo apt install mp3wrap`
+Instale [ffmpeg](https://www.ffmpeg.org/) e [mp3wrap](https://mp3wrap.sourceforge.net/), que são utilizadas para converter e concatenar arquivos de áudio.
+
+Caso esteja usando uma distro linux que é baseada em debian (como Ubuntu), pode instalar diretamente via `apt`: `sudo apt install ffmpeg mp3wrap`
 
 Instale as dependências:
 
