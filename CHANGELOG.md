@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.14.0](https://github.com/wagoid/estudio-up/compare/v1.13.5...v1.14.0) (2024-11-11)
+
+
+### Features
+
+* adiciona tela para gerenciar vozes ([7456dab](https://github.com/wagoid/estudio-up/commit/7456daba1e1cc5c7e01736501cf0cbcaf2d8867b))
+* atualiza as configurações de k8s para deploy na OCI ([c6f5570](https://github.com/wagoid/estudio-up/commit/c6f55704e63ffa5da92fd108ca9559bdc9c814be))
+* atualiza o tts para utilizar nossa ferramenta interna no lugar de azure ([c784b59](https://github.com/wagoid/estudio-up/commit/c784b59a1da76ef52e1aaa8c20d94bd0e33ad255))
+
 ## [1.13.5](https://github.com/wagoid/estudio-up/compare/v1.13.4...v1.13.5) (2024-09-25)
 
 
