@@ -46,6 +46,7 @@ type EditChapterFormProps = {
   onRemove: (chapter: EditingChapter) => Promise<void>
   objectStoreUrl: string
   voices: string[]
+  index: number
 }
 
 const defaultImageDescriptionTitle = 'Descrição de imagem'
@@ -79,6 +80,7 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
   onRemove,
   objectStoreUrl,
   voices,
+  index,
 }) => {
   const { control, handleSubmit, watch, getValues, setValue } =
     useForm<FormValues>({
@@ -170,6 +172,7 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
           options={chapterTypeOptions}
         />
         <FormSelect
+          idSuffix={index.toString()}
           name="voice"
           label="Voz"
           options={voiceOptions}

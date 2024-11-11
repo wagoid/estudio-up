@@ -81,6 +81,7 @@ export const PageContent: FC<PageContentProps> = ({
               onRemove={onRemoveChapter}
               objectStoreUrl={objectStoreUrl}
               voices={voices}
+              index={index}
             />
           ))}
         </CardContent>

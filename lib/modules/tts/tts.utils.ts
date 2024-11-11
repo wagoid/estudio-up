@@ -167,8 +167,49 @@ export const textToSpeech = async (
 
 export const getVoices = async () => {
   const url = buildTextToSpeechUrl('/api/voices')
-  const res = await pRetry(() => fetch(url))
+  const res = await pRetry(
+    () => fetch(url, { cache: 'no-store' }),
+    RETRY_OPTIONS,
+  )
   const body = (await res.json()) as { voices: string[] }
 
   return body.voices.map((voice) => voice.replace('.wav', '')).sort()
+}
+
+export const uploadVoice = async (file: File) => {
+  const url = buildTextToSpeechUrl('/api/voices')
+
+  const formData = new FormData()
+  formData.append('file', file)
+
+  console.log(`uploading voice: ${file.name}`)
+
+  const response = await pRetry(
+    () => fetch(url, { method: 'POST', body: formData }),
+    RETRY_OPTIONS,
+  )
+
+  if (!response.ok) {
+    console.error('Failed to upload voice', await response.text())
+    throw new Error('Failed to upload voice')
+  }
+}
+
+export const deleteVoice = async (filename: string) => {
+  const url = buildTextToSpeechUrl('/api/voices')
+
+  console.log(`deleting voice: ${filename}`)
+
+  const formData = new FormData()
+  formData.append('filename', filename)
+
+  const response = await pRetry(
+    () => fetch(url, { method: 'DELETE', body: formData }),
+    RETRY_OPTIONS,
+  )
+
+  if (!response.ok) {
+    console.error('Failed to delete voice', await response.text())
+    throw new Error('Failed to delete voice')
+  }
 }

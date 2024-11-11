@@ -57,6 +57,7 @@ export const EditTitleForm: FC<EditTitleFormProps> = ({
     <Box component="form" noValidate autoComplete="off" onSubmit={onSubmit}>
       <Stack alignItems="flex-start">
         <FormSelect
+          idSuffix={title.fileId ?? title.text}
           name="voice"
           label="Voz"
           options={voiceOptions}

@@ -17,6 +17,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
+import SettingsIcon from '@mui/icons-material/Settings'
 import { FC, PropsWithChildren, useState } from 'react'
 import Link from 'next/link'
 import { UserDropdown } from './UserDropdown'
@@ -134,6 +135,9 @@ export const AppWrapper: FC<PropsWithChildren & { user?: AuthUser }> = ({
           </LinkItem>
           <LinkItem text="Gravações" href="/gravacoes">
             <RecordVoiceOverIcon />
+          </LinkItem>
+          <LinkItem text="Configurações" href="/configuracoes">
+            <SettingsIcon />
           </LinkItem>
         </List>
       </DrawerStyled>

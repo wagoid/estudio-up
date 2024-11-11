@@ -62,11 +62,11 @@ spec:
             - name: AUTHENTIK_URL
               value: https://acesso.uptec.top
             - name: AWS_BUCKET_NAME
-              value: up-estudio
+              value: estudio
             - name: AWS_REGION
               value: local
             - name: AWS_ACCESS_KEY_ID
-              value: up-estudio
+              value: estudio
             - name: AWS_S3_ENDPOINT_URL
               value: http://minio.minio
             - name: AWS_S3_FORCE_PATH_STYLE

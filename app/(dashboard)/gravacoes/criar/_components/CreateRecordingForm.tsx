@@ -50,6 +50,7 @@ export const CreateRecordingForm: FC<{ voices: string[] }> = ({ voices }) => {
           Defina o título da gravação, para depois criar os capítulos.
         </Typography>
         <FormSelect
+          idSuffix=""
           name="voice"
           label="Voz"
           options={voiceOptions}

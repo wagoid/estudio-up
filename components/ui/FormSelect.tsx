@@ -25,7 +25,7 @@ type FormSelectProps<
 > = {
   label: string
   options: SelectOption[]
-  idSuffix?: string
+  idSuffix: string
 } & Omit<ControllerProps<TFieldValues, TName>, 'render'> &
   SelectProps
 
@@ -36,7 +36,7 @@ export const FormSelect = <
   name,
   options,
   label,
-  idSuffix: idSuffixParam,
+  idSuffix,
   disabled,
   control,
   ...other
@@ -50,8 +50,8 @@ export const FormSelect = <
         fieldState: { error },
         formState: { isSubmitting },
       }) => {
-        const idSuffix = idSuffixParam ?? (Math.random() * 1000).toString()
-        const labelId = `${name}-label-${idSuffix}`
+        const id = `${name}-${idSuffix}`
+        const labelId = `${id}-label`
 
         return (
           <FormControl disabled={disabled || isSubmitting} error={!!error}>
