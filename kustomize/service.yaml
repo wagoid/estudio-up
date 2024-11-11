@@ -4,7 +4,7 @@ metadata:
   name: estudio
 spec:
   selector:
-    app: estudio
+    app.kubernetes.io/name: estudio
   ports:
     - protocol: TCP
       port: 3000

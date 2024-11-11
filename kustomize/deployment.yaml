@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: estudio
   labels:
-    app: estudio
+    app.kubernetes.io/name: estudio
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: estudio
+      app.kubernetes.io/name: estudio
   template:
     metadata:
       labels:
-        app: estudio
+        app.kubernetes.io/name: estudio
     spec:
       initContainers:
         - name: estudio-migrate
@@ -28,9 +28,9 @@ spec:
             - name: POSTGRES_PORT
               value: '5432'
             - name: POSTGRES_DATABASE
-              value: upestudio
+              value: estudio
             - name: POSTGRES_USER
-              value: upestudio
+              value: estudio
       containers:
         - name: estudio
           image: ghcr.io/wagoid/estudio-up:v1.13.5 # {x-release-please-version}
@@ -54,9 +54,9 @@ spec:
             - name: POSTGRES_PORT
               value: '5432'
             - name: POSTGRES_DATABASE
-              value: upestudio
+              value: estudio
             - name: POSTGRES_USER
-              value: upestudio
+              value: estudio
             - name: AUTH_URL
               value: https://estudio.uptec.top
             - name: AUTHENTIK_URL
@@ -65,11 +65,11 @@ spec:
               value: estudio
             - name: AWS_REGION
               value: local
-            - name: AWS_ACCESS_KEY_ID
-              value: estudio
             - name: AWS_S3_ENDPOINT_URL
-              value: http://minio.minio
+              value: http://minio.minio:9000
             - name: AWS_S3_FORCE_PATH_STYLE
               value: 'true'
             - name: AWS_S3_PUBLIC_URL
               value: https://storage.wagdev.top
+            - name: TTS_URL
+              value: http://tts:7851
