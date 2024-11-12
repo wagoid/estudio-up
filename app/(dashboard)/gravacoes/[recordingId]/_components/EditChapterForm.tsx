@@ -82,7 +82,7 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
   voices,
   index,
 }) => {
-  const { control, handleSubmit, watch, getValues, setValue } =
+  const { control, handleSubmit, watch, getValues, setValue, reset } =
     useForm<FormValues>({
       defaultValues: {
         type: chapter.type,
@@ -122,19 +122,19 @@ export const EditChapterForm: FC<EditChapterFormProps> = ({
 
   useEffect(() => {
     const title = getValues('title')
-
-    setValue(
-      'voice',
+    const defaultVoiceForType =
       getDefaultVoiceForType(voices, chapterType as ChapterType) ??
-        getValues('voice'),
-    )
+      getValues('voice')
+
     if (chapterType === imageDescriptionChapterType && !title) {
       setValue('title', defaultImageDescriptionTitle)
+      setValue('voice', defaultVoiceForType)
     } else if (
       chapterType === contentChapterType &&
       title === defaultImageDescriptionTitle
     ) {
       setValue('title', '')
+      setValue('voice', defaultVoiceForType)
     }
   }, [chapterType, getValues, setValue])
 

@@ -70,6 +70,6 @@ spec:
             - name: AWS_S3_FORCE_PATH_STYLE
               value: 'true'
             - name: AWS_S3_PUBLIC_URL
-              value: https://storage.wagdev.top
+              value: https://arquivos.uptec.top
             - name: TTS_URL
               value: https://tts.uptec.top
