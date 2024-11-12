@@ -9,15 +9,27 @@ import { execa } from 'execa'
 import { tmpdir } from 'os'
 import { resolve } from 'path'
 
-const buildTextToSpeechUrl = (
+const buildTtsHeaders = (): Record<string, string> => {
+  if (process.env.TTS_USERNAME && process.env.TTS_PASSWORD) {
+    const username = process.env.TTS_USERNAME
+    const password = process.env.TTS_PASSWORD
+    const encodedAuth = Buffer.from(`${username}:${password}`).toString(
+      'base64',
+    )
+
+    return {
+      Authorization: `Basic ${encodedAuth}`,
+    }
+  }
+
+  return {}
+}
+
+const buildTtsUrl = (
   pathname: string,
   searchParams: Record<string, string> = {},
 ) => {
   const url = new URL(`${process.env.TTS_URL as string}${pathname}`)
-  if (process.env.TTS_USERNAME && process.env.TTS_PASSWORD) {
-    url.username = process.env.TTS_USERNAME
-    url.password = process.env.TTS_PASSWORD
-  }
 
   Object.entries(searchParams).forEach(([param, value]) => {
     url.searchParams.set(param, value)
@@ -119,7 +131,7 @@ export const textToSpeech = async (
     const mp3Filename = filename.replace('.wav', '.mp3')
 
     await pRetry(async () => {
-      const url = buildTextToSpeechUrl('/api/tts-generate-streaming', {
+      const url = buildTtsUrl('/api/tts-generate-streaming', {
         language: 'pt',
         output_file: filename,
         voice: `${voiceName}.wav`,
@@ -130,7 +142,13 @@ export const textToSpeech = async (
       await execa`rm -f ${filename}`
 
       const fileStream = createWriteStream(filename)
-      const res = await fetch(url)
+      const res = await fetch(url, { headers: buildTtsHeaders() })
+
+      if (!res.ok) {
+        console.log(`Error generating voice: ${res.status}`, url.toString())
+        throw new Error('Error generating voice')
+      }
+
       await finished(
         Readable.fromWeb(res.body as ReadableStream).pipe(fileStream),
       )
@@ -166,18 +184,24 @@ export const textToSpeech = async (
 }
 
 export const getVoices = async () => {
-  const url = buildTextToSpeechUrl('/api/voices')
+  const url = buildTtsUrl('/api/voices')
   const res = await pRetry(
-    () => fetch(url, { cache: 'no-store' }),
+    () => fetch(url, { cache: 'no-store', headers: buildTtsHeaders() }),
     RETRY_OPTIONS,
   )
-  const body = (await res.json()) as { voices: string[] }
 
-  return body.voices.map((voice) => voice.replace('.wav', '')).sort()
+  if (!res.ok) {
+    console.log(`Failed to list voices: ${res.status}`)
+    throw new Error('Failed to list voices')
+  }
+
+  const { voices } = (await res.json()) as { voices: string[] }
+
+  return voices.map((voice) => voice.replace('.wav', '')).sort()
 }
 
 export const uploadVoice = async (file: File) => {
-  const url = buildTextToSpeechUrl('/api/voices')
+  const url = buildTtsUrl('/api/voices')
 
   const formData = new FormData()
   formData.append('file', file)
@@ -185,7 +209,12 @@ export const uploadVoice = async (file: File) => {
   console.log(`uploading voice: ${file.name}`)
 
   const response = await pRetry(
-    () => fetch(url, { method: 'POST', body: formData }),
+    () =>
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+        headers: buildTtsHeaders(),
+      }),
     RETRY_OPTIONS,
   )
 
@@ -196,7 +225,7 @@ export const uploadVoice = async (file: File) => {
 }
 
 export const deleteVoice = async (filename: string) => {
-  const url = buildTextToSpeechUrl('/api/voices')
+  const url = buildTtsUrl('/api/voices')
 
   console.log(`deleting voice: ${filename}`)
 
@@ -204,7 +233,12 @@ export const deleteVoice = async (filename: string) => {
   formData.append('filename', filename)
 
   const response = await pRetry(
-    () => fetch(url, { method: 'DELETE', body: formData }),
+    () =>
+      fetch(url, {
+        method: 'DELETE',
+        body: formData,
+        headers: buildTtsHeaders(),
+      }),
     RETRY_OPTIONS,
   )
 
