@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.14.1](https://github.com/wagoid/estudio-up/compare/v1.14.0...v1.14.1) (2024-11-12)
+
+
+### Bug Fixes
+
+* lógica de autenticação com API ([dcae480](https://github.com/wagoid/estudio-up/commit/dcae480d1887a837a803bdba2945ea9a81caeb74))
+* usa url publico do TTS que está em outro servidor ([b2deead](https://github.com/wagoid/estudio-up/commit/b2deeadf33d319988caaf736e33a251522178af0))
+
 ## [1.14.0](https://github.com/wagoid/estudio-up/compare/v1.13.5...v1.14.0) (2024-11-11)
 
 
