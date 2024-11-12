@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.2](https://github.com/wagoid/estudio-up/compare/v1.14.1...v1.14.2) (2024-11-12)
+
+
+### Bug Fixes
+
+* URL público dos arquivos e reset incorreto da voz ([a9612c1](https://github.com/wagoid/estudio-up/commit/a9612c146701af3b87ff5fcfcb9da2ad0db2bba5))
+
 ## [1.14.1](https://github.com/wagoid/estudio-up/compare/v1.14.0...v1.14.1) (2024-11-12)
 
 
