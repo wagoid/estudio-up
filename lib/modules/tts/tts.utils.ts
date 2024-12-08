@@ -1,7 +1,6 @@
 import { createReadStream, createWriteStream } from 'fs'
 import pRetry from 'p-retry'
 import { RETRY_OPTIONS } from '../../constants'
-import { normalizeTextForTTS } from '../recordings/recordings.utils'
 import { finished } from 'stream/promises'
 import { Readable } from 'node:stream'
 import { ReadableStream } from 'stream/web'
@@ -36,6 +35,44 @@ const buildTtsUrl = (
   })
 
   return url
+}
+
+const acronymLetterToWord: Record<string, string> = {
+  A: 'á',
+  B: 'bê',
+  C: 'cê',
+  D: 'dê',
+  E: 'é',
+  F: 'éfe',
+  G: 'gê',
+  H: 'agá',
+  I: 'í',
+  J: 'jóta',
+  K: 'cá',
+  L: 'éle',
+  M: 'ême',
+  N: 'êne',
+  O: 'ó',
+  P: 'pê',
+  Q: 'quê',
+  R: 'érre',
+  S: 'ésse',
+  T: 'tê',
+  U: 'ú',
+  V: 'vê',
+  W: 'dábliu',
+  X: 'xís',
+  Y: 'ípisilon',
+  Z: 'zê',
+}
+
+export const normalizeTextForTTS = (text: string) => {
+  return text.replaceAll(/(^| |\()(?:[A-Z]){2,}/gm, (acronym) =>
+    acronym
+      .split('')
+      .map((char) => acronymLetterToWord[char] ?? char)
+      .join(''),
+  )
 }
 
 const maxChunkLength = 140
