@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/wagoid/estudio-up/compare/v1.14.2...v1.15.0) (2024-12-30)
+
+
+### Features
+
+* remove resource requests ([5ec2bab](https://github.com/wagoid/estudio-up/commit/5ec2babe2ca24384b5654e1d4233e3632ab4dc34))
+
 ## [1.14.2](https://github.com/wagoid/estudio-up/compare/v1.14.1...v1.14.2) (2024-11-12)
 
 
