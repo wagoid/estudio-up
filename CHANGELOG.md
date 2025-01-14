@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.1](https://github.com/wagoid/estudio-up/compare/v1.15.0...v1.15.1) (2025-01-14)
+
+
+### Bug Fixes
+
+* adiciona CPU request ([15630de](https://github.com/wagoid/estudio-up/commit/15630deaf9b67321c9e2382a4396a72cd56c696f))
+
 ## [1.15.0](https://github.com/wagoid/estudio-up/compare/v1.14.2...v1.15.0) (2024-12-30)
 
 
